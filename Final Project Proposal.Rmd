@@ -7,7 +7,7 @@ output: github_document
 
 ### Group Members: 
 
-* Jai Oberai (UNI:)
+* Jai Oberai (UNI:jo2570)
 
 * Amelia Zhao (UNI:)
 
@@ -23,7 +23,11 @@ output: github_document
 
 ### Motivation for Project: 
 
-* 
+It is expected that when it comes to emergency medical services (EMS), faster is *always* better. Most EMS operations aim to have a response time of 8 minute or less for advanced life support (ALS) units responding to life-threatening events. 
+
+In 2018, it was estimated that ~46 percent of ambulance responses to serious emergencies took longer than 10 minutes in NYC.  The City of New York spends more than $1.1 billion annually to provide EMS services to the city, however the money is often not used wisely. However, with some conflicting reports claiming that an 8 minute or less response time may not improve health outcomes it calls into question whether a response time <8 min is important and if we should we allocate more funds to reduce NYC response times?" 
+
+This study seeks to assess the association between NYC EMS response time and mortality. 
 
 ### Intended Final Products: 
 * Written Report 
@@ -47,4 +51,10 @@ https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj
 * Exposure: EMS Response times (Continous)
 
 ### Proposed Timeline: 
-* 
+**November 7** - Submit Proposal </p>
+**November 11** - Group Meeting (Assign Tasks) </p>
+**November 20** - Group Meeting (Review Sections Assigned) </p>
+**November 27** - Group Meeting (All deliverables should be finished and ready for final polishing) </p>
+**December 5** - Submit Written Report, Webpage, Screencast, and Peer Review </p>
+**December 10** - In Class Discussion </p>
+
