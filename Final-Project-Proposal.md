@@ -37,9 +37,10 @@ JACAB
     Dispatch System - obtained from NYC Open Data.
     <https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj>
 
-  - Possible variables to explore: INITIAL\_SEVERITY\_LEVEL\_CODE,
+  - Possible variables: INITIAL\_SEVERITY\_LEVEL\_CODE,
     FINAL\_SEVERITY\_LEVEL\_CODE, DISPATCH\_RESPONSE\_SECONDS\_QY,
-    INCIDENT\_TRAVEL\_TM\_SECONDS\_QY, HELD\_INDICATOR, BOROUGH, ZIPCODE
+    INCIDENT\_TRAVEL\_TM\_SECONDS\_QY, HELD\_INDICATOR, BOROUGH,
+    ZIPCODE, Incident Disposition Code (83)
 
 ##### NYC CENSUS DATA:
 
@@ -48,7 +49,9 @@ JACAB
 
 ### Planned Analyses / Visualizations / Coding Challenges:
 
-  - 
+  - Outcome: Death upon arrivals (Binary)
+  - Exposure: EMS Response times (Continous)
+
 ### Proposed Timeline:
 
-  - November 7 by 1:00
+  -
