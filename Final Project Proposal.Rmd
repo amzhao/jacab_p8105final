@@ -9,11 +9,11 @@ output: github_document
 
 * Jai Oberai (UNI:jo2570)
 
-* Amelia Zhao (UNI:)
+* Amelia Zhao (UNI:az2356)
 
-* Carolina Queiroz Cardoso (UNI:)
+* Carolina Queiroz Cardoso (UNI:cq2207)
 
-* Amanda Howarth (UNI:)
+* Amanda Howarth (UNI:amh2325)
 
 * Bing Bing Guo (UNI:BG2645)
 
@@ -47,8 +47,47 @@ https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj
 
 
 ### Planned Analyses / Visualizations / Coding Challenges: 
-* Outcome: Death upon arrivals (Binary)
-* Exposure: EMS Response times (Continous)
+
+* Main outcome: Death upon arrivals (Binary)
+
+* Main exposure: EMS Response times (Continous)
+
+**Analysis Plan:** 
+
+* Read in the dataset 
+
+* Limit dataset by year 
+
+* Clean dataset (e.g. rename variables according to good naming conventions, factoring ordinal variables, etc)
+
+* Create new variables 
+
+* Look at descriptive measures (tables)
+
+*	Visualize the relationship between key variables 
+
+*	Model key relationships and assess significance 
+
+*	Describe data/analysis limitations
+
+**Visualizations:** 
+
+*	Heat map of call count by zip code 
+
+*	Line graph of call count by year grouping by type of call
+
+*	Boxplot: distribution of deaths by borough
+
+*	Scatterplot of time of response by number of deaths on arrival 
+
+**Coding Challenges:** 
+
+*	Importing 8.5M rows will take a long time (we will then limit) 
+
+*	Preparing/recoding/ordering variables for graphing and modelling purposes
+
+###### *all points above are subject to change at the discretion of the group members with council from TAs and/or the professor*
+
 
 ### Proposed Timeline: 
 **November 7** - Submit Proposal </p>
@@ -57,4 +96,3 @@ https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj
 **November 27** - Group Meeting (All deliverables should be finished and ready for final polishing) </p>
 **December 5** - Submit Written Report, Webpage, Screencast, and Peer Review </p>
 **December 10** - In Class Discussion </p>
-
