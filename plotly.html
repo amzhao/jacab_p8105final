@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Plotly Plots</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.46.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.46.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+#TOC {
+  display: none !important;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HOME</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="overview.html">Overview</a>
+</li>
+<li>
+  <a href="report_web.html">Report</a>
+</li>
+<li class="dropdown-header">Plots</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a>
+    <span class="fa fa-video fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/amzhao/jacab_p8105final">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Plotly Plots</h1>
+
+</div>
+
+
+<p>importing and cleaning EMS data in NYC:</p>
+<pre class="r"><code>ems_data_clean = read.csv(&quot;./data/EMS_Incident_Dispatch_Data.csv&quot;) %&gt;%
+  select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
+         DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
+         ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(col = incident_datetime, into = c(&#39;date&#39;, &#39;time&#39;), sep = &#39; &#39;) %&gt;% 
+  separate(col = date, into = c(&quot;month&quot;,&quot;day&quot;), sep = &#39;/&#39;) %&gt;% 
+  mutate(month = factor(month, levels = c(&quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;), labels = c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;June&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sept&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;), ordered = TRUE)) %&gt;% 
+  mutate(arrival_outcome = ifelse(incident_disposition_code == &quot;83&quot;, &quot;dead&quot;, &quot;alive&quot;),
+         arrival_outcome = recode_factor(arrival_outcome, `0` = &quot;alive&quot;, `1` = &quot;dead&quot;),
+         initial_severity_level_code = factor(initial_severity_level_code, 
+ levels = c(&quot;1&quot;, &quot;2&quot;,&quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;), ordered = TRUE),
+         final_severity_level_code = factor(final_severity_level_code, 
+                                            levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;), ordered = TRUE), 
+         held_indicator = recode(held_indicator, &quot;N&quot; = &quot;no&quot;, &quot;Y&quot; = &quot;yes&quot;)) %&gt;%
+  mutate(neighbourhood = recode(zipcode, &quot;10026&quot; = &quot;central harlem&quot;, &quot;10027&quot; = &quot;central harlem&quot;, &quot;10030&quot; = &quot;central harlem&quot;, &quot;10037&quot; = &quot;central harlem&quot;, &quot;10039&quot; = &quot;central harlem&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10011&quot; = &quot;chelsea and clinton&quot;, &quot;10018&quot; = &quot;chelsea and clinton&quot;, &quot;10019&quot; = &quot;chelsea and clinton&quot;, &quot;10020&quot; = &quot;chelsea and clinton&quot;, &quot;10036&quot; = &quot;chelsea and clinton&quot;,  &quot;10029&quot; = &quot;east harlem&quot;, &quot;10035&quot; = &quot;east harlem&quot;, &quot;10010&quot; = &quot;gramercy park and murray hill&quot;, &quot;10016&quot; = &quot;gramercy park and murray hill&quot;, &quot;10017&quot; = &quot;gramercy park and murray hill&quot;, &quot;10022&quot; = &quot;gramercy park and murray hill&quot;, &quot;10012&quot; = &quot;greenwich village and soho&quot;, &quot;10013&quot; = &quot;greenwich village and soho&quot;, &quot;10014&quot; = &quot;greenwich village and soho&quot;, &quot;10004&quot; = &quot;lower manhattan&quot;, &quot;10005&quot; = &quot;lower manhattan&quot;, &quot;10006&quot; = &quot;lower manhattan&quot;, &quot;10007&quot; = &quot;lower manhattan&quot;, &quot;10038&quot; = &quot;lower manhattan&quot;, &quot;10280&quot; = &quot;lower manhattan&quot;, &quot;10002&quot; = &quot;lower east side&quot;, &quot;10003&quot; = &quot;lower east side&quot;, &quot;10009&quot; = &quot;lower east side&quot;, &quot;10021&quot; = &quot;upper east side&quot;, &quot;10028&quot; = &quot;upper east side&quot;, &quot;10044&quot; = &quot;upper east side&quot;, &quot;10065&quot; = &quot;upper east side&quot;, &quot;10075&quot; = &quot;upper east side&quot;, &quot;10128&quot; = &quot;upper east side&quot;, &quot;10023&quot; = &quot;upper west side&quot;, &quot;10024&quot; = &quot;upper west side&quot;, &quot;10025&quot; = &quot;upper west side&quot;, &quot;10031&quot; = &quot;inwood and washington heights&quot;, &quot;10032&quot; = &quot;inwood and washington heights&quot;, &quot;10033&quot; = &quot;inwood and washington heights&quot;, &quot;10034&quot; = &quot;inwood and washington heights&quot;, &quot;10040&quot; = &quot;inwood and washington heights&quot; )
+  ) %&gt;%  
+  drop_na(neighbourhood) %&gt;% 
+    select(-incident_disposition_code, -zipcode) </code></pre>
+<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
+## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+
+## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
+## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].</code></pre>
+<pre><code>## Warning: Unreplaced values treated as NA as .x is not compatible. Please
+## specify replacements exhaustively or supply .default</code></pre>
+<p>Count by month – FINAL</p>
+<pre class="r"><code>ems_data_clean %&gt;% 
+  select(arrival_outcome, month) %&gt;% 
+  group_by(month, arrival_outcome) %&gt;%
+  drop_na(arrival_outcome) %&gt;% 
+  summarise_(n = ~n()) %&gt;%
+  filter(arrival_outcome == &quot;dead&quot;) %&gt;% 
+  plot_ly(y = ~n, x = ~month, type = &quot;bar&quot;,
+          color = ~month)</code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## Warning: summarise_() is deprecated. 
+## Please use summarise() instead
+## 
+## The &#39;programming&#39; vignette or the tidyeval book can help you
+## to program with summarise() : https://tidyeval.tidyverse.org
+## This warning is displayed once per session.</code></pre>
+<div id="htmlwidget-598f152eeff2dd2cd673" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-598f152eeff2dd2cd673">{"x":{"visdat":{"17ad3261ff9ee":["function () ","plotlyVisDat"]},"cur_data":"17ad3261ff9ee","attrs":{"17ad3261ff9ee":{"y":{},"x":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"month","type":"category","categoryorder":"array","categoryarray":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"n"},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"y":[175],"x":["Dec"],"type":"bar","name":"Dec","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[181],"x":["Nov"],"type":"bar","name":"Nov","marker":{"color":"rgba(194,223,35,1)","line":{"color":"rgba(194,223,35,1)"}},"textfont":{"color":"rgba(194,223,35,1)"},"error_y":{"color":"rgba(194,223,35,1)"},"error_x":{"color":"rgba(194,223,35,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[166],"x":["Oct"],"type":"bar","name":"Oct","marker":{"color":"rgba(133,213,74,1)","line":{"color":"rgba(133,213,74,1)"}},"textfont":{"color":"rgba(133,213,74,1)"},"error_y":{"color":"rgba(133,213,74,1)"},"error_x":{"color":"rgba(133,213,74,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[143],"x":["Sept"],"type":"bar","name":"Sept","marker":{"color":"rgba(81,197,106,1)","line":{"color":"rgba(81,197,106,1)"}},"textfont":{"color":"rgba(81,197,106,1)"},"error_y":{"color":"rgba(81,197,106,1)"},"error_x":{"color":"rgba(81,197,106,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[161],"x":["Aug"],"type":"bar","name":"Aug","marker":{"color":"rgba(43,176,127,1)","line":{"color":"rgba(43,176,127,1)"}},"textfont":{"color":"rgba(43,176,127,1)"},"error_y":{"color":"rgba(43,176,127,1)"},"error_x":{"color":"rgba(43,176,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[192],"x":["Jul"],"type":"bar","name":"Jul","marker":{"color":"rgba(30,155,138,1)","line":{"color":"rgba(30,155,138,1)"}},"textfont":{"color":"rgba(30,155,138,1)"},"error_y":{"color":"rgba(30,155,138,1)"},"error_x":{"color":"rgba(30,155,138,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[169],"x":["June"],"type":"bar","name":"June","marker":{"color":"rgba(37,133,142,1)","line":{"color":"rgba(37,133,142,1)"}},"textfont":{"color":"rgba(37,133,142,1)"},"error_y":{"color":"rgba(37,133,142,1)"},"error_x":{"color":"rgba(37,133,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[150],"x":["May"],"type":"bar","name":"May","marker":{"color":"rgba(45,112,142,1)","line":{"color":"rgba(45,112,142,1)"}},"textfont":{"color":"rgba(45,112,142,1)"},"error_y":{"color":"rgba(45,112,142,1)"},"error_x":{"color":"rgba(45,112,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[153],"x":["Apr"],"type":"bar","name":"Apr","marker":{"color":"rgba(56,89,140,1)","line":{"color":"rgba(56,89,140,1)"}},"textfont":{"color":"rgba(56,89,140,1)"},"error_y":{"color":"rgba(56,89,140,1)"},"error_x":{"color":"rgba(56,89,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[164],"x":["Mar"],"type":"bar","name":"Mar","marker":{"color":"rgba(67,62,133,1)","line":{"color":"rgba(67,62,133,1)"}},"textfont":{"color":"rgba(67,62,133,1)"},"error_y":{"color":"rgba(67,62,133,1)"},"error_x":{"color":"rgba(67,62,133,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[168],"x":["Feb"],"type":"bar","name":"Feb","marker":{"color":"rgba(72,33,115,1)","line":{"color":"rgba(72,33,115,1)"}},"textfont":{"color":"rgba(72,33,115,1)"},"error_y":{"color":"rgba(72,33,115,1)"},"error_x":{"color":"rgba(72,33,115,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[216],"x":["Jan"],"type":"bar","name":"Jan","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>count by neighbourhood</p>
+<pre class="r"><code>ems_data_clean %&gt;% 
+  select(arrival_outcome, neighbourhood) %&gt;% 
+  group_by(neighbourhood, arrival_outcome) %&gt;%
+  drop_na(arrival_outcome) %&gt;% 
+  summarise_(n = ~n()) %&gt;%
+  filter(arrival_outcome == &quot;dead&quot;) %&gt;% 
+  plot_ly(y = ~n, x = ~neighbourhood, type = &quot;bar&quot;,
+          color = ~neighbourhood)</code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): n too large, allowed maximum for palette Set2 is 8
+## Returning the palette you asked for with that many colors
+
+## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): n too large, allowed maximum for palette Set2 is 8
+## Returning the palette you asked for with that many colors</code></pre>
+<div id="htmlwidget-4bb62ccc1940b0226883" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4bb62ccc1940b0226883">{"x":{"visdat":{"17ad374b2034f":["function () ","plotlyVisDat"]},"cur_data":"17ad374b2034f","attrs":{"17ad374b2034f":{"y":{},"x":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"neighbourhood","type":"category","categoryorder":"array","categoryarray":["central harlem","chelsea and clinton","east harlem","gramercy park and murray hill","greenwich village and soho","inwood and washington heights","lower east side","lower manhattan","upper east side","upper west side"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"n"},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"y":[247],"x":["central harlem"],"type":"bar","name":"central harlem","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[196],"x":["chelsea and clinton"],"type":"bar","name":"chelsea and clinton","marker":{"color":"rgba(228,156,113,1)","line":{"color":"rgba(228,156,113,1)"}},"textfont":{"color":"rgba(228,156,113,1)"},"error_y":{"color":"rgba(228,156,113,1)"},"error_x":{"color":"rgba(228,156,113,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[181],"x":["east harlem"],"type":"bar","name":"east harlem","marker":{"color":"rgba(201,153,157,1)","line":{"color":"rgba(201,153,157,1)"}},"textfont":{"color":"rgba(201,153,157,1)"},"error_y":{"color":"rgba(201,153,157,1)"},"error_x":{"color":"rgba(201,153,157,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[161],"x":["gramercy park and murray hill"],"type":"bar","name":"gramercy park and murray hill","marker":{"color":"rgba(175,154,200,1)","line":{"color":"rgba(175,154,200,1)"}},"textfont":{"color":"rgba(175,154,200,1)"},"error_y":{"color":"rgba(175,154,200,1)"},"error_x":{"color":"rgba(175,154,200,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[86],"x":["greenwich village and soho"],"type":"bar","name":"greenwich village and soho","marker":{"color":"rgba(226,148,184,1)","line":{"color":"rgba(226,148,184,1)"}},"textfont":{"color":"rgba(226,148,184,1)"},"error_y":{"color":"rgba(226,148,184,1)"},"error_x":{"color":"rgba(226,148,184,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[259],"x":["inwood and washington heights"],"type":"bar","name":"inwood and washington heights","marker":{"color":"rgba(176,209,99,1)","line":{"color":"rgba(176,209,99,1)"}},"textfont":{"color":"rgba(176,209,99,1)"},"error_y":{"color":"rgba(176,209,99,1)"},"error_x":{"color":"rgba(176,209,99,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[275],"x":["lower east side"],"type":"bar","name":"lower east side","marker":{"color":"rgba(227,217,62,1)","line":{"color":"rgba(227,217,62,1)"}},"textfont":{"color":"rgba(227,217,62,1)"},"error_y":{"color":"rgba(227,217,62,1)"},"error_x":{"color":"rgba(227,217,62,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[41],"x":["lower manhattan"],"type":"bar","name":"lower manhattan","marker":{"color":"rgba(245,207,100,1)","line":{"color":"rgba(245,207,100,1)"}},"textfont":{"color":"rgba(245,207,100,1)"},"error_y":{"color":"rgba(245,207,100,1)"},"error_x":{"color":"rgba(245,207,100,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[248],"x":["upper east side"],"type":"bar","name":"upper east side","marker":{"color":"rgba(219,192,155,1)","line":{"color":"rgba(219,192,155,1)"}},"textfont":{"color":"rgba(219,192,155,1)"},"error_y":{"color":"rgba(219,192,155,1)"},"error_x":{"color":"rgba(219,192,155,1)"},"xaxis":"x","yaxis":"y","frame":null},{"y":[344],"x":["upper west side"],"type":"bar","name":"upper west side","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Final Plot 1 - Death Count by NYC Neighborhood Over Time, 2018</p>
+<pre class="r"><code>deaths_scatter = ems_data_clean%&gt;%
+select(arrival_outcome, neighbourhood, month) %&gt;%
+group_by (arrival_outcome, neighbourhood, month) %&gt;% 
+drop_na(arrival_outcome) %&gt;% 
+summarise_(n_death = ~n()) %&gt;%
+filter(arrival_outcome %in% &quot;dead&quot;) %&gt;%
+plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = &quot;scatter&quot;, mode = &quot;lines+markers&quot;, alpha = 0.5) %&gt;%
+  layout(title = &#39;Death County on Arrival by NYC Neighborhood Over Time, 2018&#39;,
+    xaxis = list(title = &#39;Month&#39;),
+         yaxis = list(title = &#39;Dead on Arrival (n)&#39;),
+         legend = list(x = 0.5, y = 0.95))</code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre class="r"><code>deaths_scatter</code></pre>
+<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): n too large, allowed maximum for palette Set2 is 8
+## Returning the palette you asked for with that many colors</code></pre>
+<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): n too large, allowed maximum for palette Set2 is 8
+## Returning the palette you asked for with that many colors</code></pre>
+<div id="htmlwidget-7a19c730976506ac579f" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7a19c730976506ac579f">{"x":{"visdat":{"17ad373b89322":["function () ","plotlyVisDat"]},"cur_data":"17ad373b89322","attrs":{"17ad373b89322":{"x":{},"y":{},"mode":"lines+markers","color":{},"alpha":0.5,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Death County on Arrival by NYC Neighborhood Over Time, 2018","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Dead on Arrival (n)"},"legend":{"x":0.5,"y":0.95},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[29,20,23,23,20,16,23,26,16,17,15,19],"mode":"lines+markers","type":"scatter","name":"central harlem","marker":{"color":"rgba(102,194,165,0.5)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,0.5)"},"error_y":{"color":"rgba(102,194,165,0.5)"},"error_x":{"color":"rgba(102,194,165,0.5)"},"line":{"color":"rgba(102,194,165,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[17,17,10,15,14,19,18,16,14,23,16,17],"mode":"lines+markers","type":"scatter","name":"chelsea and clinton","marker":{"color":"rgba(228,156,113,0.5)","line":{"color":"rgba(228,156,113,1)"}},"textfont":{"color":"rgba(228,156,113,0.5)"},"error_y":{"color":"rgba(228,156,113,0.5)"},"error_x":{"color":"rgba(228,156,113,0.5)"},"line":{"color":"rgba(228,156,113,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[17,15,23,13,17,12,13,10,18,16,13,14],"mode":"lines+markers","type":"scatter","name":"east harlem","marker":{"color":"rgba(201,153,157,0.5)","line":{"color":"rgba(201,153,157,1)"}},"textfont":{"color":"rgba(201,153,157,0.5)"},"error_y":{"color":"rgba(201,153,157,0.5)"},"error_x":{"color":"rgba(201,153,157,0.5)"},"line":{"color":"rgba(201,153,157,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[23,9,17,13,8,13,16,10,10,15,14,13],"mode":"lines+markers","type":"scatter","name":"gramercy park and murray hill","marker":{"color":"rgba(175,154,200,0.5)","line":{"color":"rgba(175,154,200,1)"}},"textfont":{"color":"rgba(175,154,200,0.5)"},"error_y":{"color":"rgba(175,154,200,0.5)"},"error_x":{"color":"rgba(175,154,200,0.5)"},"line":{"color":"rgba(175,154,200,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[7,7,7,9,8,7,11,6,7,6,5,6],"mode":"lines+markers","type":"scatter","name":"greenwich village and soho","marker":{"color":"rgba(226,148,184,0.5)","line":{"color":"rgba(226,148,184,1)"}},"textfont":{"color":"rgba(226,148,184,0.5)"},"error_y":{"color":"rgba(226,148,184,0.5)"},"error_x":{"color":"rgba(226,148,184,0.5)"},"line":{"color":"rgba(226,148,184,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[28,27,21,18,16,28,24,20,12,22,19,24],"mode":"lines+markers","type":"scatter","name":"inwood and washington heights","marker":{"color":"rgba(176,209,99,0.5)","line":{"color":"rgba(176,209,99,1)"}},"textfont":{"color":"rgba(176,209,99,0.5)"},"error_y":{"color":"rgba(176,209,99,0.5)"},"error_x":{"color":"rgba(176,209,99,0.5)"},"line":{"color":"rgba(176,209,99,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[26,25,19,19,24,15,30,21,18,23,31,24],"mode":"lines+markers","type":"scatter","name":"lower east side","marker":{"color":"rgba(227,217,62,0.5)","line":{"color":"rgba(227,217,62,1)"}},"textfont":{"color":"rgba(227,217,62,0.5)"},"error_y":{"color":"rgba(227,217,62,0.5)"},"error_x":{"color":"rgba(227,217,62,0.5)"},"line":{"color":"rgba(227,217,62,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[5,7,1,4,3,5,2,2,4,2,4,2],"mode":"lines+markers","type":"scatter","name":"lower manhattan","marker":{"color":"rgba(245,207,100,0.5)","line":{"color":"rgba(245,207,100,1)"}},"textfont":{"color":"rgba(245,207,100,0.5)"},"error_y":{"color":"rgba(245,207,100,0.5)"},"error_x":{"color":"rgba(245,207,100,0.5)"},"line":{"color":"rgba(245,207,100,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[28,17,20,13,11,20,26,27,15,17,31,23],"mode":"lines+markers","type":"scatter","name":"upper east side","marker":{"color":"rgba(219,192,155,0.5)","line":{"color":"rgba(219,192,155,1)"}},"textfont":{"color":"rgba(219,192,155,0.5)"},"error_y":{"color":"rgba(219,192,155,0.5)"},"error_x":{"color":"rgba(219,192,155,0.5)"},"line":{"color":"rgba(219,192,155,0.5)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Jan","Feb","Mar","Apr","May","June","Jul","Aug","Sept","Oct","Nov","Dec"],"y":[36,24,23,26,29,34,29,23,29,25,33,33],"mode":"lines+markers","type":"scatter","name":"upper west side","marker":{"color":"rgba(179,179,179,0.5)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,0.5)"},"error_y":{"color":"rgba(179,179,179,0.5)"},"error_x":{"color":"rgba(179,179,179,0.5)"},"line":{"color":"rgba(179,179,179,0.5)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>time_boro = ems_data_clean%&gt;%
+  select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %&gt;%
+  group_by(arrival_outcome, neighbourhood) %&gt;%
+  drop_na(arrival_outcome) %&gt;%
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %&gt;% 
+  plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = &quot;bar&quot;, colors = &quot;Set2&quot;)</code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`</code></pre>
+<pre><code>## Warning in plot_ly(., x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, : The group argument has been deprecated. Use `group_by()` or split instead.
+## See `help(&#39;plotly_data&#39;)` for examples</code></pre>
+<pre class="r"><code>time_boro</code></pre>
+<div id="htmlwidget-90ef159e5fc0581643d4" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-90ef159e5fc0581643d4">{"x":{"visdat":{"17ad36fbcf745":["function () ","plotlyVisDat"]},"cur_data":"17ad36fbcf745","attrs":{"17ad36fbcf745":{"x":{},"y":{},"color":{},"colors":"Set2","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"neighbourhood","type":"category","categoryorder":"array","categoryarray":["central harlem","chelsea and clinton","east harlem","gramercy park and murray hill","greenwich village and soho","inwood and washington heights","lower east side","lower manhattan","upper east side","upper west side"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"mean_time/60"},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":["central harlem","chelsea and clinton","east harlem","gramercy park and murray hill","greenwich village and soho","inwood and washington heights","lower east side","lower manhattan","upper east side","upper west side"],"y":[9.90798248859292,8.80834924743402,10.4155040864887,7.61279194507448,8.64734693877551,9.24046458780457,7.2798071673202,8.04535851001178,8.32584511218741,9.02614584106714],"type":"bar","name":"alive","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["central harlem","chelsea and clinton","east harlem","gramercy park and murray hill","greenwich village and soho","inwood and washington heights","lower east side","lower manhattan","upper east side","upper west side"],"y":[5.6025641025641,5.0578231292517,4.96565377532228,4.37567287784679,5.32209302325581,5.32947232947233,4.42260606060606,4.68089430894309,4.4505376344086,4.88352713178295],"type":"bar","name":"dead","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
