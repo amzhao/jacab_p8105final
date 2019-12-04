@@ -72,6 +72,25 @@ ems_data_clean %>%
 ```
 
 
+Logistic Regression Model 
+```{r}
+ems_data_clean %>% 
+    mutate(
+    initial_severity_level_code = fct_relevel(initial_severity_level_code, "1")) %>%
+    select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)
+
+model = glm(arrival_outcome ~ incident_travel_tm_seconds_qy + initial_severity_level_code + neighbourhood, data = ems_data_clean, family = binomial())
+
+model %>% 
+  broom::tidy() %>% 
+  mutate(OR = exp(estimate)) %>%
+  select(term, log_OR = estimate, OR, p.value) %>% 
+  knitr::kable(digits = 3)
+
+res.aov <- aov(incident_travel_tm_seconds_qy ~ neighbourhood, data = ems_data_clean)
+summary(res.aov) 
+# Because the p-value is less than 0.05, we know there are statistically significant differneces between the incident travel time in seconds between neighborhoods. 
+```
 
 
 
