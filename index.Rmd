@@ -1,0 +1,31 @@
+---
+title: "“Help! I’ve Fallen and Can’t Get Up”: EMS Response Times in NYC"
+---
+[Bing Bing Guo](https://bg2645.github.io/) | [Amanda Howarth](https://amandahowarth.github.io/) | [Jai Oberoi](https://jaioberoi.github.io/) | [Carolina Queiroz Cardoso](https://cq2207.github.io/)| [Amelia Zhao](https://amzhao.github.io/)
+
+
+<center>
+
+<img src="images/help_meme.jpg" width="400px" height="auto">
+
+</center>
+
+
+It is expected that when it comes to emergency medical services (EMS), faster is always better. Most EMS operations aim to have a response time of 8 minute or less for advanced life support (ALS) units responding to life-threatening events.
+
+In 2018, it was estimated that ~46 percent of ambulance responses to serious emergencies took longer than 10 minutes in NYC. The City of New York spends more than $1.1 billion annually to provide EMS services to the city, however the money is often not used wisely. However, with some conflicting reports claiming that an 8 minute or less response time may not improve health outcomes it calls into question whether a response time <8 min is important and if we should we allocate more funds to reduce NYC response times?"
+
+This study proposed to assess the association between NYC EMS response time and mortality. A detailed explanation of the findings and conclusions of this project can be found in the Project Report, [here](report.html)
+
+
+<h2> Website Overview </h2>
+<br>
+<i><b>Overview</b></i>: </br> <br>
+<i><b>Analysis</b></i>: </br> <br>
+<i><b>Report</b></i>: Full project report</br><br>
+<i><b>Plots</b></i>: </br><br>
+
+For a brief overview of our website, view our screencast [here](https://www.youtube.com/watch?v=ogEZEKVYpkQ)
+
+<iframe width="560" height="315" src="##" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+

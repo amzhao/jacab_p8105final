@@ -1,0 +1,19 @@
+title: "Help! I’ve Fallen and I Can’t Get Up"
+output_dir: "."
+navbar:
+  title: "HOME"
+  left:
+    - text: "Overview"
+      href: overview.html
+    - text: "Report"
+      href: report_web.html
+    - text: "Plots"
+      href: 
+  right:
+    - icon: fa-video fa-lg
+      href: 
+    - icon: fa-github fa-lg
+      href: https://github.com/amzhao/jacab_p8105final
+output:
+  html_document:
+    theme: paper
