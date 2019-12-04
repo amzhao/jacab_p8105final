@@ -2,7 +2,7 @@
 title: "Analysis"
 author: "Bing Bing Guo"
 date: "11/24/2019"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -16,10 +16,16 @@ library(modelr)
 library(mgcv)
 library(patchwork)
 library(plotly)
+library(maps)
+library(leaflet)
+library(rgdal)
+library(maptools)
+library(BAMMtools)
+library(spdep)
 ```
 
 importing and cleaning EMS data in NYC: 
-```{r}
+```{r warning=FALSE}
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -38,15 +44,15 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
   ) %>%  
   drop_na(neighbourhood) %>% 
-    select(-incident_disposition_code, -zipcode) 
+    select(-incident_disposition_code) 
 ```
 
 
-FINAL -- need to convert to plotly 
-```{r}
-ems_data_clean%>%
+Death Count over time, 2018:  
+```{r warning=FALSE}
+ems_data_clean %>%
 select(arrival_outcome, neighbourhood, month, borough) %>%
-group_by (arrival_outcome, neighbourhood, month, borough) %>% 
+group_by(arrival_outcome, neighbourhood, month, borough) %>% 
 drop_na(arrival_outcome) %>% 
 summarise_(n_death = ~n()) %>%
 filter(arrival_outcome == "dead") %>%
@@ -55,26 +61,37 @@ filter(arrival_outcome == "dead") %>%
 ```
 
 Severity Code by Time, Grouped by Neighborhood 
-```{r}
-ems_data_clean%>%
+```{r warning=FALSE}
+ems_data_clean %>%
   select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
-  ggplot(aes(x = initial_severity_level_code, y = mean_time/60, group = neighbourhood, color = neighbourhood)) + geom_point() + geom_line() 
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%
+  plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
+  layout(title = "Mean Travel Time by Severity for each Neighbourhood",
+    xaxis = list(title = "Severity Code"),
+         yaxis = list(title = "Mean Travel Time (s)"),
+         legend = list(x = 0.5, y = 0.95))
 ```
+With increasing intial severity level code, the average travel response time taken to reach the incidece increases. 
+- Slower response time for higher intial severity code - which is concerning? we can suggest they respond faster/prioritize these individuals with higher severity 
+- Decrease for the 8 (highest) - so they respond to 8's faster than 7's BUT still not as quickly as they respond to 1 
+- slowest times for highest severity are for East Harlem and Lower Manhattan 
+- Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights (which is concerning bc these are lower income communities with larger percentage of minority communities)
 
-```{r}
+
+Table summing the overall mean travel time (s) by arrival outcome: 
+```{r warning=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
   group_by(arrival_outcome) %>% 
   drop_na(arrival_outcome) %>%
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) 
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%  
+  knitr::kable()
 ```
 
-
-Logistic Regression Model 
-```{r}
-ems_data_clean %>% 
+Logistic Regression Model and Results Table: 
+```{r warning=FALSE}
+ems_data_clean %>%  
     mutate(
     initial_severity_level_code = fct_relevel(initial_severity_level_code, "1")) %>%
     select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)
@@ -86,12 +103,72 @@ model %>%
   mutate(OR = exp(estimate)) %>%
   select(term, log_OR = estimate, OR, p.value) %>% 
   knitr::kable(digits = 3)
-
-res.aov <- aov(incident_travel_tm_seconds_qy ~ neighbourhood, data = ems_data_clean)
-summary(res.aov) 
-# Because the p-value is less than 0.05, we know there are statistically significant differneces between the incident travel time in seconds between neighborhoods. 
 ```
 
+t-test and ANOVA:
+```{r warning=FALSE}
+t.test(ems_data_clean$incident_travel_tm_seconds_qy/60 ~ ems_data_clean$arrival_outcome, na.rm = FALSE)
+
+res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean)
+# Summary of the analysis
+summary(res.aov)
+```
+
+Map: 
+```{r warning=FALSE} 
+graph_data = ems_data_clean %>% 
+  mutate(zipcode = as.character(zipcode))
+
+# count the number of death's upon arrival by zip code
+zip_count = graph_data %>% 
+  select(arrival_outcome, zipcode, neighbourhood) %>%
+  group_by(arrival_outcome, zipcode, neighbourhood) %>% 
+  drop_na(arrival_outcome) %>% 
+  summarise_(n_death = ~n()) %>%
+  filter(arrival_outcome == "dead") 
+zip_count
+
+#import shape file for NYC zipcodes 
+city_map = readOGR(dsn = './data/ZIP_CODE_040114/ZIP_CODE_040114.shp', encoding = "UTF-8")
+city_map@data = left_join(city_map@data, zip_count, by = c("ZIPCODE" = "zipcode")) 
+
+
+
+city_map_transform = spTransform(city_map, CRS("+init=epsg:4326"))
+
+
+#popups for polygons
+label_popup = paste0(
+  "<strong>Zipcode: </strong>",
+  city_map$ZIPCODE,
+  "<br><strong>Number of Deaths: </strong>",
+  city_map$n_death
+)
+
+
+
+# set bins
+death_bins = c(0, 10, 20, 30, 40, 50, 80, 110, 140, 166)
+
+# set pals
+death_pal = colorBin('Reds', bins = death_bins, na.color = 'white')
+
+# choropleth map for # of deaths per zipcode
+leaflet(data = city_map_transform) %>% 
+  addProviderTiles('CartoDB.Positron') %>% 
+  addPolygons(fillColor = ~death_pal(n_death),
+              fillOpacity = 0.9,
+              color = "grey",
+              weight = 1,
+              popup = label_popup,
+              highlightOptions = highlightOptions(color = "black", weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addLegend('bottomleft',
+            pal = death_pal,
+            values = ~n_death,
+            title = 'Number of Dead on Arrival by Zipcode',
+            opacity = 1)
+```
 
 
 

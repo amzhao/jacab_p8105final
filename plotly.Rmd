@@ -1,10 +1,9 @@
 ---
-title: "Plotly Plots"
+title: "Dashboard"
 output: 
-html_document:
-code_folding: hide
-toc: true
-toc_float: true
+  flexdashboard::flex_dashboard:
+  orientation: columns
+  vertical_layout: fill
 ---
 
 ```{r setup, include=FALSE}
@@ -18,10 +17,12 @@ library(modelr)
 library(mgcv)
 library(patchwork)
 library(plotly)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 importing and cleaning EMS data in NYC: 
-```{r}
+```{r include=FALSE, warning=FALSE}
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -40,12 +41,13 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
   ) %>%  
   drop_na(neighbourhood) %>% 
-    select(-incident_disposition_code, -zipcode) 
+    select(-incident_disposition_code) 
 ```
 
-
-Count by month -- FINAL 
-```{r}
+Column {data-width=600}
+-----------------------------------------------------------------------
+### Death Counts by Month 
+```{r warning=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
   group_by(month, arrival_outcome) %>%
@@ -53,12 +55,21 @@ ems_data_clean %>%
   summarise_(n = ~n()) %>%
   filter(arrival_outcome == "dead") %>% 
   plot_ly(y = ~n, x = ~month, type = "bar",
-          color = ~month)
+          color = ~month, alpha = 0.7) %>% 
+  layout(title = "Death Count on Arrival for each Month in 2018",
+    xaxis = list(title = "Month"),
+         yaxis = list(title = 'Dead on Arrival (n)'),
+    showlegend = FALSE)
 ```
 
 
-count by neighbourhood 
-```{r}
+Column {data-width=400, data-height=500}
+-----------------------------------------------------------------------
+
+### Chart B
+
+Death count by neighbourhood:
+```{r warning=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
   group_by(neighbourhood, arrival_outcome) %>%
@@ -66,32 +77,43 @@ ems_data_clean %>%
   summarise_(n = ~n()) %>%
   filter(arrival_outcome == "dead") %>% 
   plot_ly(y = ~n, x = ~neighbourhood, type = "bar",
-          color = ~neighbourhood)
+          color = ~neighbourhood) %>% 
+  layout(title = "Death Count on Arrival by NYC Neighborhood",
+    xaxis = list(title = "Neighbhourhood"),
+         yaxis = list(title = 'Dead on Arrival (n)'),
+    showlegend = FALSE)
 ```
 
-Final Plot 1 - Death Count by NYC Neighborhood Over Time, 2018
-```{r}
-deaths_scatter = ems_data_clean%>%
+Death Count by NYC Neighborhood Over Time, 2018:
+```{r warning=FALSE}
+deaths_scatter = ems_data_clean %>%
 select(arrival_outcome, neighbourhood, month) %>%
-group_by (arrival_outcome, neighbourhood, month) %>% 
+group_by(arrival_outcome, neighbourhood, month) %>% 
 drop_na(arrival_outcome) %>% 
 summarise_(n_death = ~n()) %>%
 filter(arrival_outcome %in% "dead") %>%
 plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode = "lines+markers", alpha = 0.5) %>%
-  layout(title = 'Death County on Arrival by NYC Neighborhood Over Time, 2018',
+  layout(title = 'Death Count on Arrival by NYC Neighborhood Over Time, 2018',
     xaxis = list(title = 'Month'),
          yaxis = list(title = 'Dead on Arrival (n)'),
          legend = list(x = 0.5, y = 0.95))
 deaths_scatter
 ```
+Based on NYC EMS calls, the Upper West Side experienced the highest numbers of deaths per month in 2018 compared to all other NYC neighborhoods, on average. Additionally, the neighborhoods of Lower Manhattan and Greenwich Village and Soho experienced the least numbers of deaths per month in 2018.
+- which months have highest deaths? generally January = highest, December = second highest. highest spike for Inwood/Washington Heights in June
 
-```{r}
-time_boro = ems_data_clean%>%
+
+Mean Travel Time (s) by Neighbhourhood: 
+```{r warning=FALSE}
+time_boro = ems_data_clean %>%
   select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
   group_by(arrival_outcome, neighbourhood) %>%
   drop_na(arrival_outcome) %>%
   summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
-  plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2")
+  plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2") %>% 
+  layout(title = "Mean Travel Time by NYC Neighborhood",
+    xaxis = list(title = "Neighbhourhood"),
+         yaxis = list(title = 'Mean EMS Travel Time (s)'),
+    showlegend = FALSE)
 time_boro
-
 ```
