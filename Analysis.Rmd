@@ -26,22 +26,24 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
          ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %>% 
   janitor::clean_names() %>% 
   separate(col = incident_datetime, into = c('date', 'time'), sep = ' ') %>% 
-  mutate(arrival_outcome = ifelse(incident_disposition_code == "83", "dead", "alive"),  
+  separate(col = date, into = c("month","day"), sep = '/') %>% 
+  mutate(month = factor(month, levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), ordered = TRUE), 
+         month = recode(month, "1" = "Jan", "2" = "Feb", "3" = "Mar", "4" = "Apr", "5" = "May", "6" = "June", "7" = "July", "8" = "Aug", "9" = "Sept", "10" = "Oct", "11" = "Nov", "12" = "Dec")) %>% 
+  mutate(arrival_outcome = ifelse(incident_disposition_code == "83", "dead", "alive"),
+         arrival_outcome = recode_factor(arrival_outcome, `0` = "alive", `1` = "dead"),
          initial_severity_level_code = factor(initial_severity_level_code, 
  levels = c("1", "2","3", "4", "5", "6", "7", "8", "9"), ordered = TRUE),
          final_severity_level_code = factor(final_severity_level_code, 
-                                            levels = c("1", "2", "3", "4", "5", "6", "7", "8"), 
-                                            ordered = TRUE), 
+                                            levels = c("1", "2", "3", "4", "5", "6", "7", "8"), ordered = TRUE), 
          held_indicator = recode(held_indicator, "N" = "no", "Y" = "yes")) %>%
   mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
   ) %>%  
   drop_na(neighbourhood) %>% 
-    select(-incident_disposition_code, -zipcode)
-
+    select(-incident_disposition_code, -zipcode) 
 ```
 
 
-Plotting some plotly plots:
+Plotting some plotly plots: 1
 ```{r}
 ems_data_clean %>% 
   mutate(incident_travel_tm_min = (incident_travel_tm_seconds_qy/60)) %>% 
@@ -50,12 +52,13 @@ ems_data_clean %>%
   plot_ly(y = ~incident_travel_tm_min, color = ~neighbourhood, type = "box",
           colors = "Set2")
 ```
+
 ```{r}
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
   group_by(neighbourhood, arrival_outcome) %>%
   drop_na(arrival_outcome) %>% 
-  summarise_(n= ~n()) %>%
+  summarise_(n = ~n()) %>%
   mutate(proportion = prop.table(n)) %>%
   filter(arrival_outcome == "dead") %>% 
   plot_ly(y = ~proportion, color = ~neighbourhood, type = "bar",
@@ -64,10 +67,112 @@ ems_data_clean %>%
 ```
 
 ```{r}
-
 ems_data_clean %>%  
   plot_ly(y = ~incident_travel_tm_seconds_qy, x = ~dispatch_response_seconds_qy, type = "scatter", mode = "markers",
           colors = ~ neighbourhood, alpha = 0.5)
+```
+
+```{r}
+ems_data_clean %>%  
+  mutate(incident_travel_tm_min = (incident_travel_tm_seconds_qy/60)) %>%
+  group_by(arrival_outcome) %>% 
+  plot_ly(y = median(incident_travel_tm_min), x = ~month, type = "bar") 
+```
+
+
+2 
+
+Prop dead by month 
+```{r}
+ems_data_clean %>% 
+  select(arrival_outcome, month) %>% 
+  group_by(month, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  mutate(proportion = prop.table(n)) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~proportion, x = ~month, type = "bar",
+          colors = "month")
+```
+
+Count by call type
+```{r}
+ems_data_clean %>% 
+  select(arrival_outcome, initial_call_type) %>% 
+  group_by(initial_call_type, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~n, x = ~initial_call_type, type = "bar",
+          colors = ~initial_call_type)
+```
+
+Count by month 
+```{r}
+ems_data_clean %>% 
+  select(arrival_outcome, month) %>% 
+  group_by(month, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~n, x = ~month, type = "bar",
+          colors = "month")
+```
+
+
+count by neighbourhood 
+```{r}
+ems_data_clean %>% 
+  select(arrival_outcome, neighbourhood) %>% 
+  group_by(neighbourhood, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~n, x = ~neighbourhood, type = "bar",
+          colors = "neighbourhood")
+```
+
+```{r}
+ems_data_clean %>% 
+  plot_ly(x = ~incident_travel_tm_seconds_qy, y = ~neighbourhood, name = "Women", type = 'scatter',
+             mode = "markers", marker = list(color = "pink"))
+```
+
+
+```{r}
+ems_data_clean %>% 
+  plot_ly(x = ~, y = ~neighbourhood, name = "Women", type = 'scatter',
+             mode = "markers", marker = list(color = "pink")) %>%
+ add_trace(x = ~alive, y = ~School, name = "Men",type = 'scatter',
+           mode = "markers", marker = list(color = "blue"))
+```
+
+dispatch by travel time cat by dead/alive 
+```{r}
+ems_data_clean %>%  
+  plot_ly(x = ~incident_travel_tm_seconds_qy,  y = ~dispatch_response_seconds_qy, type = "scatter", mode = "lines",
+          color = ~arrival_outcome, alpha = 0.5)
 
 ```
+
+```{r}
+ems_data_clean %>% 
+  select(arrival_outcome, month, incident_travel_tm_seconds_qy) %>% 
+  
+  group_by(arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(mean_time = mean(~incident_travel_tm_seconds_qy)) %>%
+  plot_ly(x = ~month, y = ~mean_time, type = "scatter", mode = "lines",
+          color = ~arrival_outcome)
+```
+
+
+  layout title = "Gender earnings disparity",
+    xaxis = list(title = "Annual Salary (in thousands)"),
+    margin = list(l = 100)
+  )
+
+
+
+
 
