@@ -1,9 +1,10 @@
 ---
-title: "Dashboard"
-output: 
-  flexdashboard::flex_dashboard:
-  orientation: columns
-  vertical_layout: fill
+title: "Exploratory Analysis"
+output:
+  html_document:
+  code_folding: hide
+  toc: true
+  toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -17,12 +18,17 @@ library(modelr)
 library(mgcv)
 library(patchwork)
 library(plotly)
-
-theme_set(theme_bw() + theme(legend.position = "bottom"))
+library(maps)
+library(leaflet)
+library(rgdal)
+library(maptools)
+library(BAMMtools)
+library(spdep)
+library(kableExtra)
 ```
 
-importing and cleaning EMS data in NYC: 
-```{r include=FALSE, warning=FALSE}
+###Importing and cleaning EMS data in NYC: 
+```{r warning=FALSE}
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -44,9 +50,8 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
     select(-incident_disposition_code) 
 ```
 
-Column {data-width=600}
------------------------------------------------------------------------
-### Death Counts by Month 
+
+###Death Counts by Month:
 ```{r warning=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
@@ -61,14 +66,13 @@ ems_data_clean %>%
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
 ```
+The number of individuals dead upon the arrival of EMS responders: 
+- peaks in January (over 200) and June (nearly 200)
+- winnter and summer months are the highest
+- Spring and fall months have lowest death rates (September = lowest)
+- **does weather affect the response time of EMS responders? (snow, extreme heat, etc.)
 
-
-Column {data-width=400, data-height=500}
------------------------------------------------------------------------
-
-### Chart B
-
-Death count by neighbourhood:
+###Death Count by neighbourhood:
 ```{r warning=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
@@ -83,8 +87,11 @@ ems_data_clean %>%
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
 ```
+Highest death count on arrival = Upper West Side 
+Next: Lower East Side, Inwood and Washington Heights, Central Harlem 
+Lowest death count on arrival = Lower Manhattan, Greenwich Village and Soho
 
-Death Count by NYC Neighborhood Over Time, 2018:
+####Death Count by NYC Neighborhood Over Time, 2018:
 ```{r warning=FALSE}
 deaths_scatter = ems_data_clean %>%
 select(arrival_outcome, neighbourhood, month) %>%
@@ -103,7 +110,17 @@ Based on NYC EMS calls, the Upper West Side experienced the highest numbers of d
 - which months have highest deaths? generally January = highest, December = second highest. highest spike for Inwood/Washington Heights in June
 
 
-Mean Travel Time (s) by Neighbhourhood: 
+###Table summing the overall mean travel time (s) by arrival outcome: 
+```{r warning=FALSE}
+ems_data_clean %>% 
+  select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
+  group_by(arrival_outcome) %>% 
+  drop_na(arrival_outcome) %>%
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%  
+  knitr::kable()
+```
+
+###Mean Travel Time (s) by Neighbhourhood: 
 ```{r warning=FALSE}
 time_boro = ems_data_clean %>%
   select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
@@ -117,3 +134,22 @@ time_boro = ems_data_clean %>%
     showlegend = FALSE)
 time_boro
 ```
+
+
+###Severity Code by Travel Time for each Neighborhood:
+```{r warning=FALSE}
+ems_data_clean %>%
+  select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
+  group_by(neighbourhood, initial_severity_level_code) %>% 
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%
+  plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
+  layout(title = "Mean Travel Time by Severity for each Neighbourhood",
+    xaxis = list(title = "Severity Code"),
+         yaxis = list(title = "Mean Travel Time (s)"),
+         legend = list(x = 0.5, y = 0.95))
+```
+With increasing initial severity level code, the average travel response time taken to reach the incidece increases. 
+- Slower response time for higher intial severity code - which is concerning? we can suggest they respond faster/prioritize these individuals with higher severity 
+- Decrease for the 8 (highest) - so they respond to 8's faster than 7's BUT still not as quickly as they respond to 1 
+- slowest times for highest severity are for East Harlem and Lower Manhattan 
+- Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights (which is concerning bc these are lower income communities with larger percentage of minority communities)

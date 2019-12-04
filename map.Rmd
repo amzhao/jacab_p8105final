@@ -1,0 +1,107 @@
+---
+title: "Map it!"
+output:
+  html_document:
+  code_folding: hide
+  toc: true
+  toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(viridis)
+library(rvest)
+library(purrr)
+library(broom)
+library(modelr)
+library(mgcv)
+library(patchwork)
+library(plotly)
+library(maps)
+library(leaflet)
+library(rgdal)
+library(maptools)
+library(BAMMtools)
+library(spdep)
+library(kableExtra)
+```
+
+
+```{r warning=FALSE}
+ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
+  select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
+         DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH, ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %>% 
+  janitor::clean_names() %>% 
+  separate(col = incident_datetime, into = c('date', 'time'), sep = ' ') %>% 
+  separate(col = date, into = c("month","day"), sep = '/') %>% 
+  mutate(month = factor(month, levels = c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"), labels = c("Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"), ordered = TRUE)) %>% 
+  mutate(arrival_outcome = ifelse(incident_disposition_code == "83", "dead", "alive"),
+         arrival_outcome = recode_factor(arrival_outcome, `0` = "alive", `1` = "dead"),
+         initial_severity_level_code = factor(initial_severity_level_code, 
+ levels = c("1", "2","3", "4", "5", "6", "7", "8", "9"), ordered = TRUE),
+         final_severity_level_code = factor(final_severity_level_code, 
+                                            levels = c("1", "2", "3", "4", "5", "6", "7", "8"), ordered = TRUE), 
+         held_indicator = recode(held_indicator, "N" = "no", "Y" = "yes")) %>%
+  mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
+  ) %>%  
+  drop_na(neighbourhood) %>% 
+    select(-incident_disposition_code) 
+```
+```
+
+Map: 
+```{r warning=FALSE} 
+graph_data = ems_data_clean %>% 
+  mutate(zipcode = as.character(zipcode))
+
+# count the number of death's upon arrival by zip code
+zip_count = graph_data %>% 
+  select(arrival_outcome, zipcode, neighbourhood) %>%
+  group_by(arrival_outcome, zipcode, neighbourhood) %>% 
+  drop_na(arrival_outcome) %>% 
+  summarise_(n_death = ~n()) %>%
+  filter(arrival_outcome == "dead") 
+zip_count
+
+#import shape file for NYC zipcodes 
+city_map = readOGR(dsn = './data/ZIP_CODE_040114/ZIP_CODE_040114.shp', encoding = "UTF-8")
+city_map@data = left_join(city_map@data, zip_count, by = c("ZIPCODE" = "zipcode")) 
+
+
+
+city_map_transform = spTransform(city_map, CRS("+init=epsg:4326"))
+
+
+#popups for polygons
+label_popup = paste0(
+  "<strong>Zipcode: </strong>",
+  city_map$ZIPCODE,
+  "<br><strong>Number of Deaths: </strong>",
+  city_map$n_death
+)
+
+
+
+# set bins
+death_bins = c(0, 10, 20, 30, 40, 50, 80, 110, 140, 166)
+
+# set pals
+death_pal = colorBin('Reds', bins = death_bins, na.color = 'white')
+
+# choropleth map for # of deaths per zipcode
+leaflet(data = city_map_transform) %>% 
+  addProviderTiles('CartoDB.Positron') %>% 
+  addPolygons(fillColor = ~death_pal(n_death),
+              fillOpacity = 0.9,
+              color = "grey",
+              weight = 1,
+              popup = label_popup,
+              highlightOptions = highlightOptions(color = "black", weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addLegend('bottomleft',
+            pal = death_pal,
+            values = ~n_death,
+            title = 'Number of Dead on Arrival by Zipcode',
+            opacity = 1)
+```
