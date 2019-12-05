@@ -25,7 +25,6 @@ library(kableExtra)
 
 ```{r warning=FALSE, echo=FALSE}
 ###Importing and cleaning EMS data in NYC:
-
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -47,7 +46,6 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
     select(-incident_disposition_code) 
 ```
 
-
 #
 #
 
@@ -56,7 +54,6 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
 #
 
 ```{r warning=FALSE, echo=FALSE}
-
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
   group_by(month, arrival_outcome) %>%
@@ -71,7 +68,7 @@ ems_data_clean %>%
     showlegend = FALSE)
 ```
 
-The number of individuals dead upon the arrival of EMS responders peaks in the months of January (over 200 deaths) and June (nearly 200 deaths). Death numbers are the highest in the Winter and Summer months, while September has the lowest death rate.
+The number of individuals dead upon the arrival of EMS responders peaks in the months of January (216 deaths) and July (192 deaths). Death numbers are the highest in the Winter and Summer months, while September has the lowest death count upon arrival (143 deaths).
 
 #
 #
@@ -81,7 +78,6 @@ The number of individuals dead upon the arrival of EMS responders peaks in the m
 #
 
 ```{r warning=FALSE, echo=FALSE}
-
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
   group_by(neighbourhood, arrival_outcome) %>%
@@ -96,7 +92,7 @@ ems_data_clean %>%
     showlegend = FALSE)
 ```
 
-In 2018, the neighborhood with the most people dead upon arrival of EMS Response Teams was the Upper West Side, with 344 people. The Lower East Side came in 2nd place, with 275, and Inwood/Washington Heights came in a close 3rd with 259. The neighborhood with the lowest number was Lower Manhattan, with only 41 people, followed by Greenwich Village/SoHo with 86. 
+In 2018, the neighborhood with the most people dead upon arrival of EMS response teams was the Upper West Side, with 344 people. The Lower East Side had the second highest with 275, and Inwood/Washington Heights had the third highest with 259. The neighborhood with the lowest number of deaths upon arrival was Lower Manhattan with only 41 people, followed by Greenwich Village/SoHo with 86.
 
 
 #
@@ -107,7 +103,6 @@ In 2018, the neighborhood with the most people dead upon arrival of EMS Response
 #
 
 ```{r warning=FALSE, echo=FALSE}
-
 deaths_scatter = ems_data_clean %>%
 select(arrival_outcome, neighbourhood, month) %>%
 group_by(arrival_outcome, neighbourhood, month) %>% 
@@ -124,6 +119,7 @@ deaths_scatter
 
 Based on NYC EMS calls, the Upper West Side experienced the highest numbers of deaths per month in 2018 compared to all other NYC neighborhoods, on average. Additionally, the neighborhoods of Lower Manhattan and Greenwich Village and Soho experienced the least numbers of deaths per month in 2018.
 
+
 #
 
 # Mean Travel Time (min) by Neighborhood: 
@@ -135,7 +131,9 @@ ems_data_clean %>%
   select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
   group_by(arrival_outcome) %>% 
   drop_na(arrival_outcome) %>%
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy))
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy/60)) %>% 
+  knitr::kable() %>% 
+  kable_styling()
 
 time_boro = ems_data_clean %>%
   select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
@@ -152,6 +150,7 @@ time_boro
 
 The overall mean response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes. In the graph we can see that East and Central Harlem, as well as the Upper West Side, have above the average travel times for alive arrival. And Inwoode and Washington heights, Central Harlem, and Greenwich Village and Soho have above the mean travel times for dead arrival.
 
+
 #
 #
 
@@ -160,7 +159,6 @@ The overall mean response time for those who survived was 8.83 minutes, while th
 #
 
 ```{r warning=FALSE, echo=FALSE}
-
 ems_data_clean %>%
   select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
@@ -171,5 +169,5 @@ ems_data_clean %>%
          yaxis = list(title = "Mean Travel Time (min)"),
          legend = list(x = 100, y = 0.5))
 ```
-With increasing initial severity level code, the average travel response time taken to reach the incidece increases. There is a slower response time for higher intial severity code, and a decrease in response time for the severity score 8 (highest).The slowest times for highest severity are for East Harlem and Lower Manhattan.
-Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights.
+With increasing initial severity level code, the average travel response time taken to reach the incident increases. There is a slower response time for higher initial severity codes, however there is a decrease in response time for severity score 8 (highest).The slowest response times for highest severity calls are for East Harlem and Lower Manhattan. Overall, EMS responders respond the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights.
+
