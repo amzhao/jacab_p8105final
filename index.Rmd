@@ -20,7 +20,8 @@ subtitle: <center><p style="color:grey"><i>EMS Response Times in NYC</p></i></ce
 <h2> Website Overview </h2>
 
 <br>
-<font size="3"><i><b>Overview</b></i>: Project background, objectives and description of dataset used</br> <br>
+<font size="3">
+<i><b>Overview</b></i>: Project background, objectives and description of dataset used</br> <br>
 <i><b>Exploratory Analysis</b></i>: </br> Visualizations and summaries of data<br>
 <i><b>Statistical analysis</b></i>: </br> Exploratory statistical analysis of data<br>
 <i><b>Report</b></i>: </br> Full project report <br>
