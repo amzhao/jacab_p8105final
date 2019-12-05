@@ -78,7 +78,12 @@ There seems to be a slight seasonal trend in the number of those who are decease
 
 The data seem to suggests a seasonal trend in the number of individuals deceased upon arrival of EMS Response Teams. However, it is unclear whether this trend is consistent from year-to-year. 
 
-One of the biggest limitations of our study is that the data did not contain any variable indicating the type of response unit sent. The FDNY is in command of many different response units, which all correspond to different types of emergencies.
+
+#### Strengths & Limitations
+
+Our study was able to efficiently and clearly assess the relationship between 
+
+One of the biggest limitations of our study is that the data did not contain a variable indicating the type of response unit sent. The FDNY is in command of many different response units, which all correspond to different types of emergencies.
 
 Additionally, the data is only recorded once the incident is created in the FDNY system. If you’ve ever called 911 (hopefully you haven’t had to), you’ll know that the first person you talk to is not a police officer, emergency medical technician, or fire fighter. It’s a 911 Call Taker, as shown by this schematic provided by [NYC Analytics](http://home2.nyc.gov/html/911reporting/html/anatomy/call.shtml). These call takers ask tons of questions, the most notable being “What’s your emergency” to assess the appropriate emergency response team for the situation. A police officer may not be as helpful as a firefighter for a building fire.
 
