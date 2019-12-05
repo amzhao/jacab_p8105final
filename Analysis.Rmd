@@ -79,7 +79,7 @@ summary(res.aov)
 
 ```
 
-Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at elats one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
+Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
 
 # Logistic Regression
 

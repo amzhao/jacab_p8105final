@@ -102,7 +102,7 @@ Initially, we conducted the exploratory analysis using the zip codes originally 
 
 Additionally, we decided to explore whether these outcomes varied by the time of year, and whether there was a difference in the types of emergencies in each neighborhood. We felt that visual, interactive tools were the easiest way for us to see the data. Below are figures that summarize the inter-relationships of our main variables of focus: 
 
-```{r, include = FALSE}
+```{r, include = FALSE, echo = FALSE}
 library(tidyverse)
 library(patchwork)
 library(plotly)
@@ -127,7 +127,7 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   drop_na(neighbourhood) %>% 
     select(-incident_disposition_code) 
 ```
-```{r, warning = FALSE}
+```{r, warning = FALSE, echo = FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
   group_by(month, arrival_outcome) %>%
@@ -136,7 +136,7 @@ ems_data_clean %>%
   filter(arrival_outcome == "dead") %>% 
   plot_ly(y = ~n, x = ~month, type = "bar",
           color = ~month, alpha = 0.7) %>% 
-  layout(title = "Death Count on Arrival for each Month in 2018",
+  layout(title = "Figure 1. Death Count on Arrival for each Month in 2018",
     xaxis = list(title = "Month"),
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
@@ -150,7 +150,7 @@ ems_data_clean %>%
   filter(arrival_outcome == "dead") %>% 
   plot_ly(y = ~n, x = ~neighbourhood, type = "bar",
           color = ~neighbourhood) %>% 
-  layout(title = "Death Count on Arrival by NYC Neighborhood",
+  layout(title = "Figure 2. Death Count on Arrival by NYC Neighborhood",
     xaxis = list(title = "Neighborhood"),
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
@@ -162,7 +162,7 @@ drop_na(arrival_outcome) %>%
 summarise_(n_death = ~n()) %>%
 filter(arrival_outcome %in% "dead") %>%
 plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode = "lines+markers", alpha = 0.5) %>%
-  layout(title = 'Death Count on Arrival by NYC Neighborhood Over Time, 2018',
+  layout(title = 'Figure 3. Death Count on Arrival by NYC Neighborhood Over Time, 2018',
     xaxis = list(title = 'Month'),
          yaxis = list(title = 'Dead on Arrival (n)'),
          legend = list(x = 100, y = 0.5))
@@ -180,10 +180,10 @@ time_boro = ems_data_clean %>%
   drop_na(arrival_outcome) %>%
   summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
   plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2") %>% 
-  layout(title = "Mean Travel Time by NYC Neighborhood",
+  layout(title = "Figure 4. Mean Travel Time by NYC Neighborhood",
     xaxis = list(title = "Neighborhood"),
          yaxis = list(title = 'Mean EMS Travel Time (min)'),
-    showlegend = FALSE)
+    showlegend = TRUE)
 time_boro
 
 ems_data_clean %>%
@@ -191,7 +191,7 @@ ems_data_clean %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
   summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%
   plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
-  layout(title = "Mean Travel Time by Severity for each Neighborhood",
+  layout(title = "Figure 5. Mean Travel Time by Severity for each Neighborhood",
     xaxis = list(title = "Severity Code"),
          yaxis = list(title = "Mean Travel Time (min)"),
          legend = list(x = 100, y = 0.5))
@@ -209,19 +209,53 @@ There seems to be a slight seasonal trend in the number of those who are decease
 
 ## **Statistical analysis**
 
-
-
+In our statistical analysis, we aimed to answer the following questions:
+1. Is response time significantly associated with clinical outcome regarding survival? 
+  - To address this, we ran a two sample t-test comparing mean response times. 
+2. Does response time vary significantly between neighborhoods? 
+  - To address this, we performed an Analysis of Variance (ANOVA) test to determine whether mean travel time was statistically significantly different between neighborhoods. 
+3. After controlling for severity of the emergency and neighborhood, is response time associated with clinical outcome?
+  - To address this, we performed a logistic regression, including the two possible confounders of severity and neighborhood in the model. 
 
 
 
 ## **Results & Discussion**
 
-The data seem to suggests a seasonal trend in the number of individuals deceased upon arrival of EMS Response Teams. However, it is unclear whether this trend is consistent from year-to-year. 
+**Response time and survival**
+The results of our t-test, shown below, indicate that there is a statistically significant difference (p < 0.0001) in the response time for those who are found alive upon arrival EMS Response Teams and those who are not. The mean response time for those who were found deceased upon arrival was 4.9  minutes, almost half of the 8.8 minutes for those found alive upon arrival.
 
+This indicates that the emergency situation and its repercussions may have an effect on the response time of EMS Response teams. 
+
+```{r}
+t.test(ems_data_clean$incident_travel_tm_seconds_qy/60 ~ ems_data_clean$arrival_outcome, na.rm = FALSE)
+```
+**Response time and neighborhood**
+
+The results of our ANOVA test indicate that there is a statistically significant difference between mean response time and neighborhood. This ANOVA does not indicate which neighborhoods are different from each other, but that at least one of them has a statistically different mean response time. Figure 4 above displays the mean response times by neighborhood. 
+
+```{r}
+res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean)
+summary(res.aov) 
+```
+
+**Response time and survival, controlling for severity and neighborhood**
+
+The results of our logistic regression indicate that, after controlling for severity of the emergency and neighborhood, the relationship between response time and survival is still statistically significant (p = 0.04). 
+
+```{r}
+ems_data_clean %>%  
+    mutate(
+    initial_severity_level_code = fct_relevel(initial_severity_level_code, "1")) %>%
+    select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)
+```
+
+
+These results can be interpreted to indicate that the EMS Response Teams are doing their job well. Although there are still many, many people found deceased upon arrival, the significantly shorter response time indicates that the urgency of their situations are effectively communicated to Response Teams, who are acting accordingly. 
+The results of the logistic regression indicate that neighborhood and severity diminish the odds of being deceased upon arrival of EMS Response Teams.
 
 ### Strengths & Limitations
 
-Our study was able to efficiently and clearly assess the relationship between 
+Our study was able to efficiently and clearly assess the relationship between response time, survival, and Manhattan neighborhoods. 
 
 One of the biggest limitations of our study is that the data did not contain a variable indicating the type of response unit sent. The FDNY is in command of many different response units, which all correspond to different types of emergencies.
 
