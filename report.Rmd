@@ -11,24 +11,33 @@ library(tidyverse)
 *Note: The title of this project is a line from a commercial that has been [memed](https://www.google.com/search?q=life+alert+meme&sxsrf=ACYBGNQqIvW74KMRbdauXsERsqWnXo-X_Q:1575226120265&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiWjdvKjpXmAhVHq1kKHccFBD8Q_AUoAXoECAsQAw&biw=1130&bih=1257) and is often the subject of jokes. It is in no way meant to trivialize the emergencies experienced by 911 callers or the work of EMS responders. 
 
 
-# Motivation 
+# Motivation and Project Goals
+
 In New York City, emergencies abound. It’s hard to imagine a day in New York without the sound of wailing sirens and flashing emergency vehicle lights. New York City
 
 Numerous studies have shown that socioeconomic status has a large impact on health outcomes. Socioeconomic status is also very influential on where a person lives, especially in New York City. Our group sought to assess the
 
 
-# Related Work
+# Related Work/Inspiration
+When thinking about the direction for our project, our group considered past years' projects to help create an image of our end product. In looking at these projects, we found that a lot of groups focused on local, NYC-based phenomena. We thought it would be great to take a deeper look at the city that is our home. 
 
+Multiple data sources were considered, but the choice to examine Emergency Medical Services was unanimous and immediate. We tapped into our knowledge from the Core and immediately thought of the differences in health determinants, infrastructure, and accessibility between Manhattan neighborhoods. 
 
 # Initial Questions
+After a very preliminary glance at the data set, some of the proposed questions were:
 
+* Do different types of EMS calls get treated differently?
+
+* Are response times different for different types of calls?
+
+* Do response times vary by borough, zip code, or neighborhood?
+
+* Could geographical resources and income associated with neighborhoods be associated with response time?
+
+The last three
 
 # Data
-There were two data sources for this project: 
-
-1. [NYC EMS Incident Dispatch Data](https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj), owned by NYCOpenData and provided by the Fire Department of New York City.
-
-2. [2017 New York City Housing and Vacancy Survey Microdata](https://www.census.gov/data/datasets/2017/demo/nychvs/microdata.html), provided by the United States Census Bureau. 
+The data source for this project comes from the [NYC EMS Incident Dispatch Data](https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj), owned by NYCOpenData and provided by the Fire Department of New York City.
 
 
 # Exploratory analysis
