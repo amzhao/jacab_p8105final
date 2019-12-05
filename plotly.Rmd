@@ -96,7 +96,8 @@ ems_data_clean %>%
     showlegend = FALSE)
 ```
 
-The highest death count on arrival was in the Upper West Side, followed by the Lower East Side, Inwood and Washington Heights, and Central Harlem. While the lowest death count on arrival was in Lower Manhattan, Greenwich Village and Soho.
+In 2018, the neighborhood with the most people dead upon arrival of EMS Response Teams was the Upper West Side, with 344 people. The Lower East Side came in 2nd place, with 275, and Inwood/Washington Heights came in a close 3rd with 259. The neighborhood with the lowest number was Lower Manhattan, with only 41 people, followed by Greenwich Village/SoHo with 86. 
+
 
 #
 #
