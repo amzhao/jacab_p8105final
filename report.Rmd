@@ -102,6 +102,8 @@ Initially, we conducted the exploratory analysis using the zip codes originally 
 
 Additionally, we decided to explore whether these outcomes varied by the time of year, and whether there was a difference in the types of emergencies in each neighborhood. We felt that visual, interactive tools were the easiest way for us to see the data. Below are figures that summarize the inter-relationships of our main variables of focus: 
 
+
+
 ```{r, include = FALSE, echo = FALSE}
 library(tidyverse)
 library(patchwork)
@@ -198,11 +200,6 @@ ems_data_clean %>%
 ```
 
 
-
-
-
-### Death Counts by Month
-There seems to be a slight seasonal trend in the number of those who are deceased upon arrival of the EMS Response Team, with peaks during the summer and winter. There was a 34% decrease in the number of deaths between January, the month with the most, and September, the month with the least. 
 
 
 
