@@ -1,6 +1,5 @@
 ---
 title: "Help! I've Fallen and I Can't Get Up: A Report"
-output: html_document
 ---
 
 ```{r setup, include=FALSE}

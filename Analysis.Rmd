@@ -1,7 +1,6 @@
 ---
 title: "Statistical Analysis"
-output:
-  html_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -50,7 +49,7 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
 
 #
 #
-
+  
 # Two Sample T-test
 
 The Average response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes.

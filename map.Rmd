@@ -1,8 +1,9 @@
 ---
 title: "Map it!"
-output:
-  html_document
+
 ---
+#
+#
 
 ```{r setup, include=FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE)

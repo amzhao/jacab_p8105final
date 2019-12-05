@@ -7,7 +7,6 @@ subtitle: <center><p style="color:grey"><i>EMS Response Times in NYC</p></i></ce
 # 
 # 
 
-
 <center>
 
 <img src="images/help_meme.jpg" width="400px" height="auto">
