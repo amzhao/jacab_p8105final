@@ -127,7 +127,7 @@ Based on NYC EMS calls, the Upper West Side experienced the highest numbers of d
 
 #
 
-# Mean Travel Time (s) by Neighborhood: 
+# Mean Travel Time (min) by Neighborhood: 
 
 #
 
@@ -146,7 +146,7 @@ time_boro = ems_data_clean %>%
   plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2") %>% 
   layout(title = "Mean Travel Time by NYC Neighborhood",
     xaxis = list(title = "Neighborhood"),
-         yaxis = list(title = 'Mean EMS Travel Time (s)'),
+         yaxis = list(title = 'Mean EMS Travel Time (min)'),
     showlegend = FALSE)
 time_boro
 ```
@@ -169,7 +169,7 @@ ems_data_clean %>%
   plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
   layout(title = "Mean Travel Time by Severity for each Neighborhood",
     xaxis = list(title = "Severity Code"),
-         yaxis = list(title = "Mean Travel Time (s)"),
+         yaxis = list(title = "Mean Travel Time (min)"),
          legend = list(x = 0.5, y = 0.95))
 ```
 With increasing initial severity level code, the average travel response time taken to reach the incidece increases. There is a slower response time for higher intial severity code, and a decrease in response time for the severity score 8 (highest).The slowest times for highest severity are for East Harlem and Lower Manhattan.
