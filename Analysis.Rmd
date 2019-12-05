@@ -1,6 +1,7 @@
 ---
-title: "Statistical Analysis"
-output: html_document
+title: "Statistical Analyses"
+output: 
+  html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -45,7 +46,6 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   ) %>%  
   drop_na(neighbourhood) %>% 
     select(-incident_disposition_code) 
-
 ```
 
 #
@@ -74,16 +74,16 @@ In order to assess whether the travel time varies significantly between neighbor
 res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean)
 # Summary of the analysis
 summary(res.aov) 
-
 ```
 
-Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypothesis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
+Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
 
 # Logistic Regression
 
 
-We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for initial severity level and neighborhood.
-The result odds of death on arrival for each of the variables considerd can be found in the table below:
+We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for neighborhood.
+
+The result odds ratios and corresponding p-values of death on arrival (survival) for each of the variables considerd can be found in the table below:
 
 ```{r include= FALSE, warning=FALSE, echo = FALSE}
 ###Logistic Regression Model and Results Table: 
@@ -96,6 +96,8 @@ ems_data_clean %>%
 ```{r echo = FALSE}
 model = glm(arrival_outcome ~ incident_travel_tm_seconds_qy + neighbourhood, data = ems_data_clean, family = binomial())
 
+
+
 #create tidy table
 model %>% 
   broom::tidy() %>% 
@@ -103,11 +105,4 @@ model %>%
   select(term, estimate, OR, p.value) %>% 
   knitr::kable(digits = 3) %>% 
   kable_styling()
-
 ```
-
-
-
-
-
-
