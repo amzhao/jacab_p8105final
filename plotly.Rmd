@@ -119,7 +119,7 @@ plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode 
   layout(title = 'Death Count on Arrival by NYC Neighborhood Over Time, 2018',
     xaxis = list(title = 'Month'),
          yaxis = list(title = 'Dead on Arrival (n)'),
-         legend = list(x = 0.5, y = 0.95))
+         legend = list(x = 100, y = 0.5))
 deaths_scatter
 ```
 
@@ -170,7 +170,7 @@ ems_data_clean %>%
   layout(title = "Mean Travel Time by Severity for each Neighborhood",
     xaxis = list(title = "Severity Code"),
          yaxis = list(title = "Mean Travel Time (min)"),
-         legend = list(x = 0.5, y = 0.95))
+         legend = list(x = 100, y = 0.5))
 ```
 With increasing initial severity level code, the average travel response time taken to reach the incidece increases. There is a slower response time for higher intial severity code, and a decrease in response time for the severity score 8 (highest).The slowest times for highest severity are for East Harlem and Lower Manhattan.
 Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights.
