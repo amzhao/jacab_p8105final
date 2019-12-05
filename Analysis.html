@@ -16,13 +16,16 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -103,33 +106,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 64px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 69px;
+  margin-top: -69px;
 }
 .dropdown-submenu {
   position: relative;
@@ -314,8 +317,6 @@ $(document).ready(function () {
 </div>
 
 
-<p><code>{r setup, include=FALSE} knitr::opts_chunk$set(echo = TRUE) library(tidyverse) library(viridis) library(rvest) library(purrr) library(broom) library(modelr) library(mgcv) library(patchwork) library(plotly) library(maps) library(leaflet) library(rgdal) library(maptools) library(BAMMtools) library(spdep) library(kableExtra)</code></p>
-<p><code>{r warning=FALSE, echo = FALSE} ###Importing and cleaning EMS data in NYC:  ems_data_clean = read.csv(&quot;./data/EMS_Incident_Dispatch_Data.csv&quot;) %&gt;%   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,          ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %&gt;%    janitor::clean_names() %&gt;%    separate(col = incident_datetime, into = c('date', 'time'), sep = ' ') %&gt;%    separate(col = date, into = c(&quot;month&quot;,&quot;day&quot;), sep = '/') %&gt;%    mutate(month = factor(month, levels = c(&quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;), labels = c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;June&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sept&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;), ordered = TRUE)) %&gt;%    mutate(arrival_outcome = ifelse(incident_disposition_code == &quot;83&quot;, &quot;dead&quot;, &quot;alive&quot;),          arrival_outcome = recode_factor(arrival_outcome, `0` = &quot;alive&quot;, `1` = &quot;dead&quot;),          initial_severity_level_code = factor(initial_severity_level_code,   levels = c(&quot;1&quot;, &quot;2&quot;,&quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;), ordered = TRUE),          final_severity_level_code = factor(final_severity_level_code,                                              levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;), ordered = TRUE),           held_indicator = recode(held_indicator, &quot;N&quot; = &quot;no&quot;, &quot;Y&quot; = &quot;yes&quot;)) %&gt;%   mutate(neighbourhood = recode(zipcode, &quot;10026&quot; = &quot;central harlem&quot;, &quot;10027&quot; = &quot;central harlem&quot;, &quot;10030&quot; = &quot;central harlem&quot;, &quot;10037&quot; = &quot;central harlem&quot;, &quot;10039&quot; = &quot;central harlem&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10011&quot; = &quot;chelsea and clinton&quot;, &quot;10018&quot; = &quot;chelsea and clinton&quot;, &quot;10019&quot; = &quot;chelsea and clinton&quot;, &quot;10020&quot; = &quot;chelsea and clinton&quot;, &quot;10036&quot; = &quot;chelsea and clinton&quot;,  &quot;10029&quot; = &quot;east harlem&quot;, &quot;10035&quot; = &quot;east harlem&quot;, &quot;10010&quot; = &quot;gramercy park and murray hill&quot;, &quot;10016&quot; = &quot;gramercy park and murray hill&quot;, &quot;10017&quot; = &quot;gramercy park and murray hill&quot;, &quot;10022&quot; = &quot;gramercy park and murray hill&quot;, &quot;10012&quot; = &quot;greenwich village and soho&quot;, &quot;10013&quot; = &quot;greenwich village and soho&quot;, &quot;10014&quot; = &quot;greenwich village and soho&quot;, &quot;10004&quot; = &quot;lower manhattan&quot;, &quot;10005&quot; = &quot;lower manhattan&quot;, &quot;10006&quot; = &quot;lower manhattan&quot;, &quot;10007&quot; = &quot;lower manhattan&quot;, &quot;10038&quot; = &quot;lower manhattan&quot;, &quot;10280&quot; = &quot;lower manhattan&quot;, &quot;10002&quot; = &quot;lower east side&quot;, &quot;10003&quot; = &quot;lower east side&quot;, &quot;10009&quot; = &quot;lower east side&quot;, &quot;10021&quot; = &quot;upper east side&quot;, &quot;10028&quot; = &quot;upper east side&quot;, &quot;10044&quot; = &quot;upper east side&quot;, &quot;10065&quot; = &quot;upper east side&quot;, &quot;10075&quot; = &quot;upper east side&quot;, &quot;10128&quot; = &quot;upper east side&quot;, &quot;10023&quot; = &quot;upper west side&quot;, &quot;10024&quot; = &quot;upper west side&quot;, &quot;10025&quot; = &quot;upper west side&quot;, &quot;10031&quot; = &quot;inwood and washington heights&quot;, &quot;10032&quot; = &quot;inwood and washington heights&quot;, &quot;10033&quot; = &quot;inwood and washington heights&quot;, &quot;10034&quot; = &quot;inwood and washington heights&quot;, &quot;10040&quot; = &quot;inwood and washington heights&quot; )   ) %&gt;%     drop_na(neighbourhood) %&gt;%      select(-incident_disposition_code)</code></p>
 <div id="section" class="section level1">
 <h1></h1>
 </div>
@@ -326,22 +327,208 @@ $(document).ready(function () {
 <h1>Two Sample T-test</h1>
 <p>The Average response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes.</p>
 <p>In order to see if the difference in average response time between those who survived and those who died was significantly different, we performed a two sample t-test.</p>
-<p><code>{r warning=FALSE, echo = FALSE} ###t-test t.test(ems_data_clean$incident_travel_tm_seconds_qy/60 ~ ems_data_clean$arrival_outcome, na.rm = FALSE)</code></p>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  ems_data_clean$incident_travel_tm_seconds_qy/60 by ems_data_clean$arrival_outcome
+## t = 51.493, df = 2179.8, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  3.767308 4.065614
+## sample estimates:
+## mean in group alive  mean in group dead 
+##            8.827289            4.910828</code></pre>
 <p>The t-test value for the average incident response time between when the patient survived and when they died was 51.493. Given the p-value &lt;.0001 we can conclude that the averages are significantly different, at the 5% level of significance.</p>
 </div>
 <div id="anova" class="section level1">
 <h1>ANOVA</h1>
 <p>In order to assess whether the travel time varies significantly between neighborhoods in New York City, we performed an ANOVA test.</p>
-<p><code>{r warning=FALSE, echo = FALSE} #ANOVA res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean) # Summary of the analysis summary(res.aov)</code></p>
+<pre><code>##                   Df   Sum Sq Mean Sq F value Pr(&gt;F)    
+## neighbourhood      9   311078   34564   548.7 &lt;2e-16 ***
+## Residuals     334634 21077737      63                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Given the p-value of &lt;.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance.</p>
 </div>
 <div id="logistic-regression" class="section level1">
 <h1>Logistic Regression</h1>
 <p>We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for neighborhood.</p>
 <p>The result odds ratios and corresponding p-values of death on arrival (survival) for each of the variables considerd can be found in the table below:</p>
-<p><code>{r include= FALSE, warning=FALSE, echo = FALSE} ###Logistic Regression Model and Results Table:  ems_data_clean %&gt;%       mutate(     initial_severity_level_code = fct_relevel(initial_severity_level_code, &quot;1&quot;)) %&gt;%     select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)</code></p>
-<p>```{r echo = FALSE} model = glm(arrival_outcome ~ incident_travel_tm_seconds_qy + neighbourhood, data = ems_data_clean, family = binomial())</p>
-<p>#create tidy table model %&gt;% broom::tidy() %&gt;% mutate(OR = exp(estimate)) %&gt;% select(term, estimate, OR, p.value) %&gt;% knitr::kable(digits = 3) %&gt;% kable_styling() ```</p>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+OR
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+-3.550
+</td>
+<td style="text-align:right;">
+0.029
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+incident_travel_tm_seconds_qy
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodchelsea and clinton
+</td>
+<td style="text-align:right;">
+-0.820
+</td>
+<td style="text-align:right;">
+0.440
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodeast harlem
+</td>
+<td style="text-align:right;">
+-0.217
+</td>
+<td style="text-align:right;">
+0.805
+</td>
+<td style="text-align:right;">
+0.027
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodgramercy park and murray hill
+</td>
+<td style="text-align:right;">
+-0.510
+</td>
+<td style="text-align:right;">
+0.600
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodgreenwich village and soho
+</td>
+<td style="text-align:right;">
+-0.231
+</td>
+<td style="text-align:right;">
+0.794
+</td>
+<td style="text-align:right;">
+0.067
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodinwood and washington heights
+</td>
+<td style="text-align:right;">
+-0.056
+</td>
+<td style="text-align:right;">
+0.946
+</td>
+<td style="text-align:right;">
+0.535
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodlower east side
+</td>
+<td style="text-align:right;">
+-0.166
+</td>
+<td style="text-align:right;">
+0.847
+</td>
+<td style="text-align:right;">
+0.061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodlower manhattan
+</td>
+<td style="text-align:right;">
+-0.927
+</td>
+<td style="text-align:right;">
+0.396
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodupper east side
+</td>
+<td style="text-align:right;">
+0.494
+</td>
+<td style="text-align:right;">
+1.638
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+neighbourhoodupper west side
+</td>
+<td style="text-align:right;">
+0.645
+</td>
+<td style="text-align:right;">
+1.905
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
