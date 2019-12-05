@@ -8,7 +8,7 @@ navbar:
     - text: "Exploratory Analysis"
       href: plotly.html
     - text: "Statistical Analysis"
-      href: analysis.html
+      href: Analysis.html
     - text: "Report"
       href: report.html
     - text: "Map it!"
