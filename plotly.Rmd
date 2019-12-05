@@ -1,10 +1,7 @@
 ---
 title: "Exploratory Analysis"
 output:
-  html_document:
-  code_folding: hide
-  toc: true
-  toc_float: true
+  html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -81,7 +78,7 @@ The number of individuals dead upon the arrival of EMS responders peaks in the m
 #
 #
 
-# Death Count by Neighbourhood:
+# Death Count by Neighborhood:
 
 #
 
@@ -96,7 +93,7 @@ ems_data_clean %>%
   plot_ly(y = ~n, x = ~neighbourhood, type = "bar",
           color = ~neighbourhood) %>% 
   layout(title = "Death Count on Arrival by NYC Neighborhood",
-    xaxis = list(title = "Neighbhourhood"),
+    xaxis = list(title = "Neighborhood"),
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
 ```
@@ -130,7 +127,7 @@ Based on NYC EMS calls, the Upper West Side experienced the highest numbers of d
 
 #
 
-# Mean Travel Time (s) by Neighbhourhood: 
+# Mean Travel Time (s) by Neighborhood: 
 
 #
 
@@ -148,7 +145,7 @@ time_boro = ems_data_clean %>%
   summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
   plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2") %>% 
   layout(title = "Mean Travel Time by NYC Neighborhood",
-    xaxis = list(title = "Neighbhourhood"),
+    xaxis = list(title = "Neighborhood"),
          yaxis = list(title = 'Mean EMS Travel Time (s)'),
     showlegend = FALSE)
 time_boro
@@ -170,7 +167,7 @@ ems_data_clean %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
   summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%
   plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
-  layout(title = "Mean Travel Time by Severity for each Neighbourhood",
+  layout(title = "Mean Travel Time by Severity for each Neighborhood",
     xaxis = list(title = "Severity Code"),
          yaxis = list(title = "Mean Travel Time (s)"),
          legend = list(x = 0.5, y = 0.95))

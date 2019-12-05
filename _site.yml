@@ -8,11 +8,11 @@ navbar:
     - text: "Exploratory Analysis"
       href: plotly.html
     - text: "Statistical Analysis"
-      href: Analysis.html
+      href: analysis.html
     - text: "Report"
-      href: Report.html
+      href: report.html
     - text: "Map it!"
-      href: Map.html
+      href: map.html
   right:
     - icon: fa-video fa-lg
       href:
