@@ -12,7 +12,7 @@
 
 
 
-<title>Statistical Analysis</title>
+<title>Analysis.utf8.md</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,9 +23,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -292,7 +289,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a>
+  <a href="https://youtu.be/y5sT5tN0BKY">
     <span class="fa fa-video fa-lg"></span>
      
   </a>
@@ -312,222 +309,83 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Statistical Analysis</h1>
 
 </div>
 
 
-<div id="section" class="section level1">
-<h1></h1>
-</div>
-<div id="section-1" class="section level1">
-<h1></h1>
-</div>
-<div id="two-sample-t-test" class="section level1">
-<h1>Two Sample T-test</h1>
-<p>The Average response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes.</p>
-<p>In order to see if the difference in average response time between those who survived and those who died was significantly different, we performed a two sample t-test.</p>
-<pre><code>## 
-##  Welch Two Sample t-test
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
+<p>Bing Bing Guo 11/24/2019</p>
+<p>importing and cleaning EMS data in NYC:</p>
+<pre class="r"><code>ems_data_clean = read.csv(&quot;./data/EMS_Incident_Dispatch_Data.csv&quot;) %&gt;%
+  select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
+         DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
+         ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(col = incident_datetime, into = c(&#39;date&#39;, &#39;time&#39;), sep = &#39; &#39;) %&gt;% 
+  separate(col = date, into = c(&quot;month&quot;,&quot;day&quot;), sep = &#39;/&#39;) %&gt;% 
+  mutate(month = factor(month, levels = c(&quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;), labels = c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;June&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sept&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;), ordered = TRUE)) %&gt;% 
+  mutate(arrival_outcome = ifelse(incident_disposition_code == &quot;83&quot;, &quot;dead&quot;, &quot;alive&quot;),
+         arrival_outcome = recode_factor(arrival_outcome, `0` = &quot;alive&quot;, `1` = &quot;dead&quot;),
+         initial_severity_level_code = factor(initial_severity_level_code, 
+ levels = c(&quot;1&quot;, &quot;2&quot;,&quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;), ordered = TRUE),
+         final_severity_level_code = factor(final_severity_level_code, 
+                                            levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;), ordered = TRUE), 
+         held_indicator = recode(held_indicator, &quot;N&quot; = &quot;no&quot;, &quot;Y&quot; = &quot;yes&quot;)) %&gt;%
+  mutate(neighbourhood = recode(zipcode, &quot;10026&quot; = &quot;central harlem&quot;, &quot;10027&quot; = &quot;central harlem&quot;, &quot;10030&quot; = &quot;central harlem&quot;, &quot;10037&quot; = &quot;central harlem&quot;, &quot;10039&quot; = &quot;central harlem&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10001&quot; = &quot;chelsea and clinton&quot;, &quot;10011&quot; = &quot;chelsea and clinton&quot;, &quot;10018&quot; = &quot;chelsea and clinton&quot;, &quot;10019&quot; = &quot;chelsea and clinton&quot;, &quot;10020&quot; = &quot;chelsea and clinton&quot;, &quot;10036&quot; = &quot;chelsea and clinton&quot;,  &quot;10029&quot; = &quot;east harlem&quot;, &quot;10035&quot; = &quot;east harlem&quot;, &quot;10010&quot; = &quot;gramercy park and murray hill&quot;, &quot;10016&quot; = &quot;gramercy park and murray hill&quot;, &quot;10017&quot; = &quot;gramercy park and murray hill&quot;, &quot;10022&quot; = &quot;gramercy park and murray hill&quot;, &quot;10012&quot; = &quot;greenwich village and soho&quot;, &quot;10013&quot; = &quot;greenwich village and soho&quot;, &quot;10014&quot; = &quot;greenwich village and soho&quot;, &quot;10004&quot; = &quot;lower manhattan&quot;, &quot;10005&quot; = &quot;lower manhattan&quot;, &quot;10006&quot; = &quot;lower manhattan&quot;, &quot;10007&quot; = &quot;lower manhattan&quot;, &quot;10038&quot; = &quot;lower manhattan&quot;, &quot;10280&quot; = &quot;lower manhattan&quot;, &quot;10002&quot; = &quot;lower east side&quot;, &quot;10003&quot; = &quot;lower east side&quot;, &quot;10009&quot; = &quot;lower east side&quot;, &quot;10021&quot; = &quot;upper east side&quot;, &quot;10028&quot; = &quot;upper east side&quot;, &quot;10044&quot; = &quot;upper east side&quot;, &quot;10065&quot; = &quot;upper east side&quot;, &quot;10075&quot; = &quot;upper east side&quot;, &quot;10128&quot; = &quot;upper east side&quot;, &quot;10023&quot; = &quot;upper west side&quot;, &quot;10024&quot; = &quot;upper west side&quot;, &quot;10025&quot; = &quot;upper west side&quot;, &quot;10031&quot; = &quot;inwood and washington heights&quot;, &quot;10032&quot; = &quot;inwood and washington heights&quot;, &quot;10033&quot; = &quot;inwood and washington heights&quot;, &quot;10034&quot; = &quot;inwood and washington heights&quot;, &quot;10040&quot; = &quot;inwood and washington heights&quot; )
+  ) %&gt;%  
+  drop_na(neighbourhood) %&gt;% 
+    select(-incident_disposition_code, -zipcode) </code></pre>
+<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
+## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+
+## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
+## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+
+## Warning: Unreplaced values treated as NA as .x is not compatible. Please
+## specify replacements exhaustively or supply .default</code></pre>
+<p>FINAL – need to convert to plotly</p>
+<pre class="r"><code>ems_data_clean%&gt;%
+select(arrival_outcome, neighbourhood, month, borough) %&gt;%
+group_by (arrival_outcome, neighbourhood, month, borough) %&gt;% 
+drop_na(arrival_outcome) %&gt;% 
+summarise_(n_death = ~n()) %&gt;%
+filter(arrival_outcome == &quot;dead&quot;) %&gt;%
+  ggplot(aes(x = month, y = n_death, group = neighbourhood, color = neighbourhood)) + 
+  geom_line() + geom_point()</code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`
+
+## Warning: summarise_() is deprecated. 
+## Please use summarise() instead
 ## 
-## data:  ems_data_clean$incident_travel_tm_seconds_qy/60 by ems_data_clean$arrival_outcome
-## t = 51.493, df = 2179.8, p-value &lt; 2.2e-16
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  3.767308 4.065614
-## sample estimates:
-## mean in group alive  mean in group dead 
-##            8.827289            4.910828</code></pre>
-<p>The t-test value for the average incident response time between when the patient survived and when they died was 51.493. Given the p-value &lt;.0001 we can conclude that the averages are significantly different, at the 5% level of significance.</p>
-</div>
-<div id="anova" class="section level1">
-<h1>ANOVA</h1>
-<p>In order to assess whether the travel time varies significantly between neighborhoods in New York City, we performed an ANOVA test.</p>
-<pre><code>##                   Df   Sum Sq Mean Sq F value Pr(&gt;F)    
-## neighbourhood      9   311078   34564   548.7 &lt;2e-16 ***
-## Residuals     334634 21077737      63                   
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>Given the p-value of &lt;.0001 is smaller than 0.05, we can reject the null hypothesis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance.</p>
-</div>
-<div id="logistic-regression" class="section level1">
-<h1>Logistic Regression</h1>
-<p>We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for initial severity level and neighborhood. The result odds of death on arrival for each of the variables considerd can be found in the table below:</p>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-OR
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
--3.550
-</td>
-<td style="text-align:right;">
-0.029
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-incident_travel_tm_seconds_qy
-</td>
-<td style="text-align:right;">
--0.004
-</td>
-<td style="text-align:right;">
-0.996
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodchelsea and clinton
-</td>
-<td style="text-align:right;">
--0.820
-</td>
-<td style="text-align:right;">
-0.440
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodeast harlem
-</td>
-<td style="text-align:right;">
--0.217
-</td>
-<td style="text-align:right;">
-0.805
-</td>
-<td style="text-align:right;">
-0.027
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodgramercy park and murray hill
-</td>
-<td style="text-align:right;">
--0.510
-</td>
-<td style="text-align:right;">
-0.600
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodgreenwich village and soho
-</td>
-<td style="text-align:right;">
--0.231
-</td>
-<td style="text-align:right;">
-0.794
-</td>
-<td style="text-align:right;">
-0.067
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodinwood and washington heights
-</td>
-<td style="text-align:right;">
--0.056
-</td>
-<td style="text-align:right;">
-0.946
-</td>
-<td style="text-align:right;">
-0.535
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodlower east side
-</td>
-<td style="text-align:right;">
--0.166
-</td>
-<td style="text-align:right;">
-0.847
-</td>
-<td style="text-align:right;">
-0.061
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodlower manhattan
-</td>
-<td style="text-align:right;">
--0.927
-</td>
-<td style="text-align:right;">
-0.396
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodupper east side
-</td>
-<td style="text-align:right;">
-0.494
-</td>
-<td style="text-align:right;">
-1.638
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-neighbourhoodupper west side
-</td>
-<td style="text-align:right;">
-0.645
-</td>
-<td style="text-align:right;">
-1.905
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-</tbody>
-</table>
+## The &#39;programming&#39; vignette or the tidyeval book can help you
+## to program with summarise() : https://tidyeval.tidyverse.org
+## This warning is displayed once per session.</code></pre>
+<p><img src="Analysis_files/figure-gfm/unnamed-chunk-2-1.png" /><!-- --></p>
+<p>Severity Code by Time, Grouped by Neighborhood</p>
+<pre class="r"><code>ems_data_clean%&gt;%
+  select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %&gt;%
+  group_by(neighbourhood, initial_severity_level_code) %&gt;% 
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %&gt;% 
+  ggplot(aes(x = initial_severity_level_code, y = mean_time/60, group = neighbourhood, color = neighbourhood)) + geom_point() + geom_line() </code></pre>
+<p><img src="Analysis_files/figure-gfm/unnamed-chunk-3-1.png" /><!-- --></p>
+<pre class="r"><code>ems_data_clean %&gt;% 
+  select(arrival_outcome, incident_travel_tm_seconds_qy) %&gt;% 
+  group_by(arrival_outcome) %&gt;% 
+  drop_na(arrival_outcome) %&gt;%
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) </code></pre>
+<pre><code>## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`
+
+## Warning: Factor `arrival_outcome` contains implicit NA, consider using
+## `forcats::fct_explicit_na`
+
+## # A tibble: 2 x 2
+##   arrival_outcome mean_time
+##   &lt;fct&gt;               &lt;dbl&gt;
+## 1 alive                530.
+## 2 dead                 295.</code></pre>
 </div>
 
 
