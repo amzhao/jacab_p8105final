@@ -8,7 +8,7 @@ title: "Overview"
 
 In 2018, it was estimated that ~46 percent of ambulance responses to serious emergencies took longer than 10 minutes in NYC. The City of New York spends more than $1.1 billion annually to provide EMS services to the city, however the money is often not used wisely. However, with some conflicting reports claiming that an 8 minute or less response time may not improve health outcomes it calls into question whether a response time <8 min is important and if we should we allocate more funds to reduce NYC response times?"
 
-This study proposed to assess the association between NYC EMS response time and mortality. A detailed explanation of the findings and conclusions of this project can be found in the Project Report, [here](report.html).</font>
+This study proposed to assess the association between NYC EMS response time and mortality. A detailed explanation of the findings and conclusions of this project can be found in the Project Report, [here](report.html).
 
 
 <h2> Dataset </h2>
@@ -20,3 +20,4 @@ _(To protect personal identifying information in accordance with the Health Insu
 
 From the original 31 variables, we selected ones for 
 
+</font>
