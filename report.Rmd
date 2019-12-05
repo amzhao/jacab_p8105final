@@ -91,6 +91,111 @@ After we limited the data set, data cleaning steps included separating the date 
 
 ## **Exploratory analysis**
 
+Our exploratory analysis focused on two outcomes of interest: 
+
+* Death upon arrival of EMS Response Team
+
+* Response time
+
+During our exploration, we sought to find any differences in these outcomes depending on neighborhood, and whether these outcomes were independent of each other. 
+Initially, we conducted the exploratory analysis using the zip codes originally found in the NYC OpenData dataset, but felt that this was inaccessible and produced hard-to-read graphs. Thus, we used the NYS standardized neighborhoods to make our results more coherent and understandable. 
+
+Additionally, we decided to explore whether these outcomes varied by the time of year, and whether there was a difference in the types of emergencies in each neighborhood. We felt that visual, interactive tools were the easiest way for us to see the data. Below are figures that summarize the inter-relationships of our main variables of focus: 
+
+```{r, include = FALSE}
+library(tidyverse)
+library(patchwork)
+library(plotly)
+
+ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
+  select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
+         DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
+         ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %>% 
+  janitor::clean_names() %>% 
+  separate(col = incident_datetime, into = c('date', 'time'), sep = ' ') %>% 
+  separate(col = date, into = c("month","day"), sep = '/') %>% 
+  mutate(month = factor(month, levels = c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"), labels = c("Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"), ordered = TRUE)) %>% 
+  mutate(arrival_outcome = ifelse(incident_disposition_code == "83", "dead", "alive"),
+         arrival_outcome = recode_factor(arrival_outcome, `0` = "alive", `1` = "dead"),
+         initial_severity_level_code = factor(initial_severity_level_code, 
+ levels = c("1", "2","3", "4", "5", "6", "7", "8", "9"), ordered = TRUE),
+         final_severity_level_code = factor(final_severity_level_code, 
+                                            levels = c("1", "2", "3", "4", "5", "6", "7", "8"), ordered = TRUE), 
+         held_indicator = recode(held_indicator, "N" = "no", "Y" = "yes")) %>%
+  mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
+  ) %>%  
+  drop_na(neighbourhood) %>% 
+    select(-incident_disposition_code) 
+```
+```{r, warning = FALSE}
+ems_data_clean %>% 
+  select(arrival_outcome, month) %>% 
+  group_by(month, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~n, x = ~month, type = "bar",
+          color = ~month, alpha = 0.7) %>% 
+  layout(title = "Death Count on Arrival for each Month in 2018",
+    xaxis = list(title = "Month"),
+         yaxis = list(title = 'Dead on Arrival (n)'),
+    showlegend = FALSE)
+
+
+ems_data_clean %>% 
+  select(arrival_outcome, neighbourhood) %>% 
+  group_by(neighbourhood, arrival_outcome) %>%
+  drop_na(arrival_outcome) %>% 
+  summarise_(n = ~n()) %>%
+  filter(arrival_outcome == "dead") %>% 
+  plot_ly(y = ~n, x = ~neighbourhood, type = "bar",
+          color = ~neighbourhood) %>% 
+  layout(title = "Death Count on Arrival by NYC Neighborhood",
+    xaxis = list(title = "Neighborhood"),
+         yaxis = list(title = 'Dead on Arrival (n)'),
+    showlegend = FALSE)
+
+deaths_scatter = ems_data_clean %>%
+select(arrival_outcome, neighbourhood, month) %>%
+group_by(arrival_outcome, neighbourhood, month) %>% 
+drop_na(arrival_outcome) %>% 
+summarise_(n_death = ~n()) %>%
+filter(arrival_outcome %in% "dead") %>%
+plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode = "lines+markers", alpha = 0.5) %>%
+  layout(title = 'Death Count on Arrival by NYC Neighborhood Over Time, 2018',
+    xaxis = list(title = 'Month'),
+         yaxis = list(title = 'Dead on Arrival (n)'),
+         legend = list(x = 100, y = 0.5))
+deaths_scatter
+
+ems_data_clean %>% 
+  select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
+  group_by(arrival_outcome) %>% 
+  drop_na(arrival_outcome) %>%
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy))
+
+time_boro = ems_data_clean %>%
+  select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
+  group_by(arrival_outcome, neighbourhood) %>%
+  drop_na(arrival_outcome) %>%
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
+  plot_ly(x = ~neighbourhood, y = ~mean_time/60, color = ~arrival_outcome, group = ~arrival_outcome, type = "bar", colors = "Set2") %>% 
+  layout(title = "Mean Travel Time by NYC Neighborhood",
+    xaxis = list(title = "Neighborhood"),
+         yaxis = list(title = 'Mean EMS Travel Time (min)'),
+    showlegend = FALSE)
+time_boro
+
+ems_data_clean %>%
+  select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
+  group_by(neighbourhood, initial_severity_level_code) %>% 
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%
+  plot_ly(x = ~initial_severity_level_code, y = ~mean_time/60, group = ~neighbourhood, color = ~neighbourhood, type = "scatter", mode = "lines+markers", alpha = 0.5) %>% 
+  layout(title = "Mean Travel Time by Severity for each Neighborhood",
+    xaxis = list(title = "Severity Code"),
+         yaxis = list(title = "Mean Travel Time (min)"),
+         legend = list(x = 100, y = 0.5))
+```
 
 
 
