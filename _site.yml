@@ -5,10 +5,14 @@ navbar:
   left:
     - text: "Overview"
       href: overview.html
-    - text: "Report"
-      href: report_web.html
-    - text: "Plots"
+    - text: "Exploratory Analysis"
       href: plotly.html
+    - text: "Statistical Analysis"
+      href: Analysis.html
+    - text: "Report"
+      href: plotly.html
+    - text: "Map it!"
+      href: Map.html
   right:
     - icon: fa-video fa-lg
       href:

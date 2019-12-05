@@ -7,7 +7,7 @@ output:
   toc_float: true
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(viridis)
@@ -28,7 +28,7 @@ library(kableExtra)
 ```
 
 
-```{r warning=FALSE}
+```{r warning=FALSE, echo = FALSE}
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH, ZIPCODE, INCIDENT_DISPOSITION_CODE, INCIDENT_DATETIME) %>% 
@@ -48,10 +48,10 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   drop_na(neighbourhood) %>% 
     select(-incident_disposition_code) 
 ```
-```
 
-Map: 
-```{r warning=FALSE} 
+
+# Map of frequency of dead on arrival in Manhattan, 2018: 
+```{r warning=FALSE, echo = FALSE} 
 graph_data = ems_data_clean %>% 
   mutate(zipcode = as.character(zipcode))
 

@@ -27,8 +27,10 @@ library(spdep)
 library(kableExtra)
 ```
 
-###Importing and cleaning EMS data in NYC: 
-```{r warning=FALSE}
+
+```{r warning=FALSE, echo=FALSE}
+###Importing and cleaning EMS data in NYC:
+
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -51,8 +53,15 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
 ```
 
 
-###Death Counts by Month:
-```{r warning=FALSE}
+#
+#
+
+# Death Counts by Month
+
+#
+
+```{r warning=FALSE, echo=FALSE}
+
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
   group_by(month, arrival_outcome) %>%
@@ -66,14 +75,18 @@ ems_data_clean %>%
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
 ```
-The number of individuals dead upon the arrival of EMS responders: 
-- peaks in January (over 200) and June (nearly 200)
-- winnter and summer months are the highest
-- Spring and fall months have lowest death rates (September = lowest)
-- **does weather affect the response time of EMS responders? (snow, extreme heat, etc.)
 
-###Death Count by neighbourhood:
-```{r warning=FALSE}
+The number of individuals dead upon the arrival of EMS responders peaks in the months of January (over 200 deaths) and June (nearly 200 deaths). Death numbers are the highest in the Winter and Summer months, while September has the lowest death rate.
+
+#
+#
+
+# Death Count by Neighbourhood:
+
+#
+
+```{r warning=FALSE, echo=FALSE}
+
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
   group_by(neighbourhood, arrival_outcome) %>%
@@ -87,12 +100,18 @@ ems_data_clean %>%
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
 ```
-Highest death count on arrival = Upper West Side 
-Next: Lower East Side, Inwood and Washington Heights, Central Harlem 
-Lowest death count on arrival = Lower Manhattan, Greenwich Village and Soho
 
-####Death Count by NYC Neighborhood Over Time, 2018:
-```{r warning=FALSE}
+The highest death count on arrival was in the Upper West Side, followed by the Lower East Side, Inwood and Washington Heights, and Central Harlem. While the lowest death count on arrival was in Lower Manhattan, Greenwich Village and Soho.
+
+#
+#
+
+# Death Count by NYC Neighborhood Over Time, 2018:
+
+#
+
+```{r warning=FALSE, echo=FALSE}
+
 deaths_scatter = ems_data_clean %>%
 select(arrival_outcome, neighbourhood, month) %>%
 group_by(arrival_outcome, neighbourhood, month) %>% 
@@ -106,22 +125,22 @@ plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode 
          legend = list(x = 0.5, y = 0.95))
 deaths_scatter
 ```
+
 Based on NYC EMS calls, the Upper West Side experienced the highest numbers of deaths per month in 2018 compared to all other NYC neighborhoods, on average. Additionally, the neighborhoods of Lower Manhattan and Greenwich Village and Soho experienced the least numbers of deaths per month in 2018.
-- which months have highest deaths? generally January = highest, December = second highest. highest spike for Inwood/Washington Heights in June
 
+#
 
-###Table summing the overall mean travel time (s) by arrival outcome: 
-```{r warning=FALSE}
+# Mean Travel Time (s) by Neighbhourhood: 
+
+#
+
+```{r warning=FALSE, echo=FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
   group_by(arrival_outcome) %>% 
   drop_na(arrival_outcome) %>%
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>%  
-  knitr::kable()
-```
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy))
 
-###Mean Travel Time (s) by Neighbhourhood: 
-```{r warning=FALSE}
 time_boro = ems_data_clean %>%
   select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
   group_by(arrival_outcome, neighbourhood) %>%
@@ -135,9 +154,17 @@ time_boro = ems_data_clean %>%
 time_boro
 ```
 
+The overall mean response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes. In the graph we can see that East and Central Harlem, as well as the Upper West Side, have above the average travel times for alive arrival. And Inwoode and Washington heights, Central Harlem, and Greenwich Village and Soho have above the mean travel times for dead arrival.
 
-###Severity Code by Travel Time for each Neighborhood:
-```{r warning=FALSE}
+#
+#
+
+# Severity Code by Travel Time for Each Neighborhood:
+
+#
+
+```{r warning=FALSE, echo=FALSE}
+
 ems_data_clean %>%
   select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
@@ -148,8 +175,5 @@ ems_data_clean %>%
          yaxis = list(title = "Mean Travel Time (s)"),
          legend = list(x = 0.5, y = 0.95))
 ```
-With increasing initial severity level code, the average travel response time taken to reach the incidece increases. 
-- Slower response time for higher intial severity code - which is concerning? we can suggest they respond faster/prioritize these individuals with higher severity 
-- Decrease for the 8 (highest) - so they respond to 8's faster than 7's BUT still not as quickly as they respond to 1 
-- slowest times for highest severity are for East Harlem and Lower Manhattan 
-- Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights (which is concerning bc these are lower income communities with larger percentage of minority communities)
+With increasing initial severity level code, the average travel response time taken to reach the incidece increases. There is a slower response time for higher intial severity code, and a decrease in response time for the severity score 8 (highest).The slowest times for highest severity are for East Harlem and Lower Manhattan.
+Overall, EMS responders response the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights.

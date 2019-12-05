@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Team JACAB: Jai, Amelia, Carolina, Amanda, &amp; Bing Bing" />
+
+
+<title>Help! I’ve Fallen and I Can’t Get Up: A Report</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HOME</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="overview.html">Overview</a>
+</li>
+<li>
+  <a href="report_web.html">Report</a>
+</li>
+<li>
+  <a href="plotly.html">Plots</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a>
+    <span class="fa fa-video fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/amzhao/jacab_p8105final">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Help! I’ve Fallen and I Can’t Get Up: A Report</h1>
+<h4 class="author">Team JACAB: Jai, Amelia, Carolina, Amanda, &amp; Bing Bing</h4>
+<h4 class="date">12/1/2019</h4>
+
+</div>
+
+
+<p>*Note: The title of this project is a line from a commercial that has been <a href="https://www.google.com/search?q=life+alert+meme&amp;sxsrf=ACYBGNQqIvW74KMRbdauXsERsqWnXo-X_Q:1575226120265&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwiWjdvKjpXmAhVHq1kKHccFBD8Q_AUoAXoECAsQAw&amp;biw=1130&amp;bih=1257">memed</a> and is often the subject of jokes. It is in no way meant to trivialize the emergencies experienced by 911 callers or the work of EMS responders.</p>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
+<p>In New York City, emergencies abound. It’s hard to imagine a day in New York without the sound of wailing sirens and flashing emergency vehicle lights. New York City</p>
+<p>Numerous studies have shown that socioeconomic status has a large impact on health outcomes. Socioeconomic status is also very influential on where a person lives, especially in New York City. Our group sought to assess the</p>
+</div>
+<div id="related-work" class="section level1">
+<h1>Related Work</h1>
+</div>
+<div id="initial-questions" class="section level1">
+<h1>Initial Questions</h1>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>There were two data sources for this project:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj">NYC EMS Incident Dispatch Data</a>, owned by NYCOpenData and provided by the Fire Department of New York City.</p></li>
+<li><p><a href="https://www.census.gov/data/datasets/2017/demo/nychvs/microdata.html">2017 New York City Housing and Vacancy Survey Microdata</a>, provided by the United States Census Bureau.</p></li>
+</ol>
+</div>
+<div id="exploratory-analysis" class="section level1">
+<h1>Exploratory analysis</h1>
+</div>
+<div id="additional-analysis" class="section level1">
+<h1>Additional analysis</h1>
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
+<p>One of the biggest limitations of our study is that the data did not contain any variable indicating the type of response unit sent. The FDNY is in command of many different response units, which all correspond to different types of emergencies.</p>
+<p>Additionally, the data is only recorded once the incident is created in the FDNY system. If you’ve ever called 911 (hopefully you haven’t had to), you’ll know that the first person you talk to is not a police officer, emergency medical technician, or fire fighter. It’s a 911 Call Taker, as shown by this schematic provided by <a href="http://home2.nyc.gov/html/911reporting/html/anatomy/call.shtml">NYC Analytics</a>. These call takers ask tons of questions, the most notable being “What’s your emergency” to assess the appropriate emergency response team for the situation. A police officer may not be as helpful as a firefighter for a building fire.</p>
+<p>After the dispatcher determines the best response team for the emergency, they will either put you directly in contact with someone from say, the fire department or police, or they will pass the information along to them while they stay on the line with you. (In the NYC Analytics schematic, this is shown under FDNY EMS VESTA in Orange as 911 Call Conference). Then, either the caller or call taker may have to relay the pertinent information to the response team dispatcher.</p>
+<p>Our data is collected only after the first 911 call taker has passed the call along to the FDNY EMS (Incident creation in the schematic). Thus, it does not include the amount of time the caller spent explaining their emergency to the dispatcher before being transferred to the FDNY. In many cases, this can be a lengthy process, but from our data it is impossible to tell. Additionally, it is unclear from the data whether, from the NYC Analytics schematic, whether our incident creation is at the general incident creation between “Call Taking” and “Skip to Dispatch” in yellow at the top, or the “EMS Incident Creation” between “911 Call Conference” and “Dispatch Queue” in orange at the bottom of the schematic.</p>
+<p>911 calls are emergencies, so time is crucial. The time before the incident is created could influence not only the resulting morbidity or mortality of those involved in the emergencies, it could also influence the amount of time the FDNY spends on the phone before a unit is dispatched. For example, if the 911 caller is in some way incapacitated, the initial call taker may have difficulties assessing the emergency and identifying the appropriate response team. The FDNY EMS dispatcher may also then have difficulties assessing what type of unit to send, or even where to send the unit.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

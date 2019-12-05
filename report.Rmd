@@ -2,7 +2,7 @@
 title: "Help! I've Fallen and I Can't Get Up: A Report"
 author: "Team JACAB: Jai, Amelia, Carolina, Amanda, & Bing Bing"
 date: "12/1/2019"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}

@@ -27,8 +27,9 @@ library(spdep)
 library(kableExtra)
 ```
 
+
+```{r warning=FALSE, echo = FALSE}
 ###Importing and cleaning EMS data in NYC: 
-```{r warning=FALSE}
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -50,32 +51,55 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
     select(-incident_disposition_code) 
 ```
 
-###t-test and ANOVA:
-```{r warning=FALSE}
+#
+#
+
+# Two Sample T-test
+
+The Average response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes.
+
+In order to see if the difference in average response time between those who survived and those who died was significantly different, we performed a two sample t-test. 
+
+```{r warning=FALSE, echo = FALSE}
+###t-test
 t.test(ems_data_clean$incident_travel_tm_seconds_qy/60 ~ ems_data_clean$arrival_outcome, na.rm = FALSE)
 
+
+```
+
+The t-test value for the average incident response time between when the patient survived and when they died was 51.493. Given the p-value <.0001 we can conclude that the averages are significantly different, at the 5% level of significance. 
+
+
+# ANOVA
+
+In order to assess whether the travel time varies significantly between neighborhoods in New York City, we performed an ANOVA test.
+
+```{r warning=FALSE, echo = FALSE}
+#ANOVA
 res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean)
+
 # Summary of the analysis
 summary(res.aov) 
+
 ```
-t-test: 
-- for those alive: average incident response time = 8.83 minutes 
-- for those dead: average incident response time = 4.91 minutes
-Since the p-value < 
 
-Anova: 
-Since the p-value is less than 0.05, we know there are statistically significant differneces between the mean incident travel time in seconds between neighborhoods.
+Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at elats one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
+
+# Logistic Regression
 
 
+We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for initial severity level and neighborhood.
+The result odds of death on arrival for each of the variables considerd can be found in the table below:
+
+```{r include= FALSE, warning=FALSE, echo = FALSE}
 ###Logistic Regression Model and Results Table: 
-```{r include= FALSE, warning=FALSE}
 ems_data_clean %>%  
     mutate(
     initial_severity_level_code = fct_relevel(initial_severity_level_code, "1")) %>%
     select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)
 ```
 
-```{r}
+```{r echo = FALSE}
 model = glm(arrival_outcome ~ incident_travel_tm_seconds_qy + initial_severity_level_code + neighbourhood, data = ems_data_clean, family = binomial())
 
 model %>% 
@@ -84,9 +108,6 @@ model %>%
   select(term, log_OR = estimate, OR, p.value) %>% 
   knitr::kable(digits = 3)
 ```
-
-We demonstrate the odds of death on arrival for each of the variables used in the analysis. 
-
 
 
 
