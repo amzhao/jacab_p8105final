@@ -1,11 +1,35 @@
-Analysis
-================
-Bing Bing Guo
-11/24/2019
+---
+title: "Statistical Analyses"
+output: 
+  html_document:
+  code_folding: hide
+  toc: true
+  toc_float: true
+---
 
-importing and cleaning EMS data in NYC:
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(viridis)
+library(rvest)
+library(purrr)
+library(broom)
+library(modelr)
+library(mgcv)
+library(patchwork)
+library(plotly)
+library(maps)
+library(leaflet)
+library(rgdal)
+library(maptools)
+library(BAMMtools)
+library(spdep)
+library(kableExtra)
+```
 
-``` r
+
+```{r warning=FALSE, echo = FALSE}
+###Importing and cleaning EMS data in NYC: 
 ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   select(INITIAL_SEVERITY_LEVEL_CODE, FINAL_SEVERITY_LEVEL_CODE, INITIAL_CALL_TYPE,
          DISPATCH_RESPONSE_SECONDS_QY, INCIDENT_TRAVEL_TM_SECONDS_QY, HELD_INDICATOR, BOROUGH,
@@ -24,71 +48,64 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   mutate(neighbourhood = recode(zipcode, "10026" = "central harlem", "10027" = "central harlem", "10030" = "central harlem", "10037" = "central harlem", "10039" = "central harlem", "10001" = "chelsea and clinton", "10001" = "chelsea and clinton", "10011" = "chelsea and clinton", "10018" = "chelsea and clinton", "10019" = "chelsea and clinton", "10020" = "chelsea and clinton", "10036" = "chelsea and clinton",  "10029" = "east harlem", "10035" = "east harlem", "10010" = "gramercy park and murray hill", "10016" = "gramercy park and murray hill", "10017" = "gramercy park and murray hill", "10022" = "gramercy park and murray hill", "10012" = "greenwich village and soho", "10013" = "greenwich village and soho", "10014" = "greenwich village and soho", "10004" = "lower manhattan", "10005" = "lower manhattan", "10006" = "lower manhattan", "10007" = "lower manhattan", "10038" = "lower manhattan", "10280" = "lower manhattan", "10002" = "lower east side", "10003" = "lower east side", "10009" = "lower east side", "10021" = "upper east side", "10028" = "upper east side", "10044" = "upper east side", "10065" = "upper east side", "10075" = "upper east side", "10128" = "upper east side", "10023" = "upper west side", "10024" = "upper west side", "10025" = "upper west side", "10031" = "inwood and washington heights", "10032" = "inwood and washington heights", "10033" = "inwood and washington heights", "10034" = "inwood and washington heights", "10040" = "inwood and washington heights" )
   ) %>%  
   drop_na(neighbourhood) %>% 
-    select(-incident_disposition_code, -zipcode) 
+    select(-incident_disposition_code) 
 ```
 
-    ## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
-    ## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
-    
-    ## Warning: Expected 2 pieces. Additional pieces discarded in 341372 rows [1,
-    ## 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+#
+#
+  
+# Two Sample T-test
 
-    ## Warning: Unreplaced values treated as NA as .x is not compatible. Please
-    ## specify replacements exhaustively or supply .default
+The Average response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes.
 
-FINAL – need to convert to plotly
+In order to see if the difference in average response time between those who survived and those who died was significantly different, we performed a two sample t-test. 
 
-``` r
-ems_data_clean%>%
-select(arrival_outcome, neighbourhood, month, borough) %>%
-group_by (arrival_outcome, neighbourhood, month, borough) %>% 
-drop_na(arrival_outcome) %>% 
-summarise_(n_death = ~n()) %>%
-filter(arrival_outcome == "dead") %>%
-  ggplot(aes(x = month, y = n_death, group = neighbourhood, color = neighbourhood)) + 
-  geom_line() + geom_point()
+```{r warning=FALSE, echo = FALSE}
+###t-test
+t.test(ems_data_clean$incident_travel_tm_seconds_qy/60 ~ ems_data_clean$arrival_outcome, na.rm = FALSE)
 ```
 
-    ## Warning: Factor `arrival_outcome` contains implicit NA, consider using
-    ## `forcats::fct_explicit_na`
+The t-test value for the average incident response time between when the patient survived and when they died was 51.493. Given the p-value <.0001 we can conclude that the averages are significantly different, at the 5% level of significance. 
 
-    ## Warning: summarise_() is deprecated. 
-    ## Please use summarise() instead
-    ## 
-    ## The 'programming' vignette or the tidyeval book can help you
-    ## to program with summarise() : https://tidyeval.tidyverse.org
-    ## This warning is displayed once per session.
 
-![](Analysis_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+# ANOVA
 
-Severity Code by Time, Grouped by Neighborhood
+In order to assess whether the travel time varies significantly between neighborhoods in New York City, we performed an ANOVA test.
 
-``` r
-ems_data_clean%>%
-  select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
-  group_by(neighbourhood, initial_severity_level_code) %>% 
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) %>% 
-  ggplot(aes(x = initial_severity_level_code, y = mean_time/60, group = neighbourhood, color = neighbourhood)) + geom_point() + geom_line() 
+```{r warning=FALSE, echo = FALSE}
+#ANOVA
+res.aov = aov(incident_travel_tm_seconds_qy/60 ~ neighbourhood, data = ems_data_clean)
+# Summary of the analysis
+summary(res.aov) 
 ```
 
-![](Analysis_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+Given the p-value of <.0001 is smaller than 0.05, we can reject the null hypotheis and conclude that the mean incident travel time is not zero for at least one of the neighborhoods, and can thus say that there is a statistically significant difference between the mean incident travel time in seconds between neighborhoods, at the 5% level of significance. 
 
-``` r
-ems_data_clean %>% 
-  select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
-  group_by(arrival_outcome) %>% 
-  drop_na(arrival_outcome) %>%
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy)) 
+# Logistic Regression
+
+
+We performed a logistic regression to model the log odds of death on arrival, given incident travel time in seconds and controlling for neighborhood.
+
+The result odds ratios and corresponding p-values of death on arrival (survival) for each of the variables considerd can be found in the table below:
+
+```{r include= FALSE, warning=FALSE, echo = FALSE}
+###Logistic Regression Model and Results Table: 
+ems_data_clean %>%  
+    mutate(
+    initial_severity_level_code = fct_relevel(initial_severity_level_code, "1")) %>%
+    select(incident_travel_tm_seconds_qy, initial_severity_level_code, neighbourhood)
 ```
 
-    ## Warning: Factor `arrival_outcome` contains implicit NA, consider using
-    ## `forcats::fct_explicit_na`
-    
-    ## Warning: Factor `arrival_outcome` contains implicit NA, consider using
-    ## `forcats::fct_explicit_na`
+```{r echo = FALSE}
+model = glm(arrival_outcome ~ incident_travel_tm_seconds_qy + neighbourhood, data = ems_data_clean, family = binomial())
 
-    ## # A tibble: 2 x 2
-    ##   arrival_outcome mean_time
-    ##   <fct>               <dbl>
-    ## 1 alive                530.
-    ## 2 dead                 295.
+
+
+#create tidy table
+model %>% 
+  broom::tidy() %>% 
+  mutate(OR = exp(estimate)) %>%
+  select(term, estimate, OR, p.value) %>% 
+  knitr::kable(digits = 3) %>% 
+  kable_styling()
+```

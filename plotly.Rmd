@@ -1,6 +1,12 @@
 ---
-title: "Exploratory Analysis"
+title: "Exploratory Analyses"
+output: 
+  html_document:
+  code_folding: hide
+  toc: true
+  toc_float: true
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -45,6 +51,7 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   drop_na(neighbourhood) %>% 
     select(-incident_disposition_code) 
 ```
+
 
 #
 #
@@ -94,7 +101,6 @@ ems_data_clean %>%
 
 In 2018, the neighborhood with the most people dead upon arrival of EMS response teams was the Upper West Side, with 344 people. The Lower East Side had the second highest with 275, and Inwood/Washington Heights had the third highest with 259. The neighborhood with the lowest number of deaths upon arrival was Lower Manhattan with only 41 people, followed by Greenwich Village/SoHo with 86.
 
-
 #
 #
 
@@ -118,7 +124,6 @@ deaths_scatter
 ```
 
 Based on NYC EMS calls, the Upper West Side experienced the highest numbers of deaths per month in 2018 compared to all other NYC neighborhoods, on average. Additionally, the neighborhoods of Lower Manhattan and Greenwich Village and Soho experienced the least numbers of deaths per month in 2018.
-
 
 #
 
@@ -150,7 +155,6 @@ time_boro
 
 The overall mean response time for those who survived was 8.83 minutes, while the average for those who died was 4.91 minutes. In the graph we can see that East and Central Harlem, as well as the Upper West Side, have above the average travel times for alive arrival. And Inwoode and Washington heights, Central Harlem, and Greenwich Village and Soho have above the mean travel times for dead arrival.
 
-
 #
 #
 
@@ -170,4 +174,3 @@ ems_data_clean %>%
          legend = list(x = 100, y = 0.5))
 ```
 With increasing initial severity level code, the average travel response time taken to reach the incident increases. There is a slower response time for higher initial severity codes, however there is a decrease in response time for severity score 8 (highest).The slowest response times for highest severity calls are for East Harlem and Lower Manhattan. Overall, EMS responders respond the slowest to East Harlem, then Central Harlem, and then Inwood and Washington Heights.
-

@@ -15,7 +15,7 @@ navbar:
       href: map.html
   right:
     - icon: fa-video fa-lg
-      href: 
+      href: https://youtu.be/y5sT5tN0BKY 
     - icon: fa-github fa-lg
       href: https://github.com/amzhao/jacab_p8105final
 output:
