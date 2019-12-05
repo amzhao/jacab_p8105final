@@ -127,6 +127,7 @@ ems_data_clean = read.csv("./data/EMS_Incident_Dispatch_Data.csv") %>%
   drop_na(neighbourhood) %>% 
     select(-incident_disposition_code) 
 ```
+
 ```{r, warning = FALSE, echo = FALSE}
 ems_data_clean %>% 
   select(arrival_outcome, month) %>% 
@@ -140,6 +141,7 @@ ems_data_clean %>%
     xaxis = list(title = "Month"),
          yaxis = list(title = 'Dead on Arrival (n)'),
     showlegend = FALSE)
+
 ems_data_clean %>% 
   select(arrival_outcome, neighbourhood) %>% 
   group_by(neighbourhood, arrival_outcome) %>%
@@ -164,11 +166,14 @@ plot_ly(x = ~month, y = ~n_death, color = ~neighbourhood,type = "scatter", mode 
          yaxis = list(title = 'Dead on Arrival (n)'),
          legend = list(x = 100, y = 0.5))
 deaths_scatter
+
 ems_data_clean %>% 
   select(arrival_outcome, incident_travel_tm_seconds_qy) %>% 
   group_by(arrival_outcome) %>% 
   drop_na(arrival_outcome) %>%
-  summarize(mean_time = mean(incident_travel_tm_seconds_qy))
+  summarize(mean_time = mean(incident_travel_tm_seconds_qy/60)) %>% 
+  knitr::kable() %>% 
+  kable_styling()
 time_boro = ems_data_clean %>%
   select(neighbourhood, arrival_outcome, incident_travel_tm_seconds_qy) %>%
   group_by(arrival_outcome, neighbourhood) %>%
@@ -180,6 +185,7 @@ time_boro = ems_data_clean %>%
          yaxis = list(title = 'Mean EMS Travel Time (min)'),
     showlegend = TRUE)
 time_boro
+
 ems_data_clean %>%
   select(neighbourhood, initial_severity_level_code, incident_travel_tm_seconds_qy) %>%
   group_by(neighbourhood, initial_severity_level_code) %>% 
@@ -253,7 +259,7 @@ We can conclude that survival odds decrease as we move to the lower parts on Man
 
 #
 
-## DISCUSSION
+## Discussion
 From our results, we also found that the mean travel time across the 10 NYC neighborhoods varies. EMS responders respond slowest to individuals living in East Harlem, Central Harlem, and Inwood/Washington Heights. This may be due to neighborhood proximity to healthcare systems and/or congestion and commuter traffic within neighborhoods. 
 
 Additionally, based on our analyses, we found that the Upper West Side had the highest number of deaths upon arrival. This was interesting to us, as we initially predicted lower-income neighborhoods would have higher deaths upon arrival. It may possible that the Upper West Side may have the highest number of deaths due to the older average age of the population. We suggest further research into analyzing the death count per neighborhood, especially comparing the count across past years. The odds of death upon arrival was significantly higher in the Upper West Side and Upper East Side. 
