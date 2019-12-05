@@ -10,7 +10,7 @@ navbar:
     - text: "Statistical Analysis"
       href: Analysis.html
     - text: "Report"
-      href: plotly.html
+      href: Report.html
     - text: "Map it!"
       href: Map.html
   right:
