@@ -317,18 +317,18 @@ $(document).ready(function () {
 
 
 <p>*Note: The title of this project is a line from a commercial that has been <a href="https://www.google.com/search?q=life+alert+meme&amp;sxsrf=ACYBGNQqIvW74KMRbdauXsERsqWnXo-X_Q:1575226120265&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwiWjdvKjpXmAhVHq1kKHccFBD8Q_AUoAXoECAsQAw&amp;biw=1130&amp;bih=1257">memed</a> and is often the subject of jokes. It is in no way meant to trivialize the emergencies experienced by 911 callers or the work of EMS responders.</p>
-<div id="motivation-and-project-goals" class="section level1">
-<h1>Motivation and Project Goals</h1>
+<div id="motivation-and-project-goals" class="section level2">
+<h2>Motivation and Project Goals</h2>
 <p>In New York City, emergencies abound. It’s hard to imagine a day in New York without the sound of wailing sirens and flashing emergency vehicle lights. New York City</p>
 <p>Numerous studies have shown that socioeconomic status has a large impact on health outcomes. Socioeconomic status is also very influential on where a person lives, especially in New York City. Our group sought to assess the</p>
 </div>
-<div id="related-workinspiration" class="section level1">
-<h1>Related Work/Inspiration</h1>
+<div id="related-workinspiration" class="section level2">
+<h2>Related Work/Inspiration</h2>
 <p>When thinking about the direction for our project, our group considered past years’ projects to help create an image of our end product. In looking at these projects, we found that a lot of groups focused on local, NYC-based phenomena. We thought it would be great to take a deeper look at the city that is our home.</p>
 <p>Multiple data sources were considered, but the choice to examine Emergency Medical Services was unanimous and immediate. We tapped into our knowledge from the Core and immediately thought of the differences in health determinants, infrastructure, and accessibility between Manhattan neighborhoods.</p>
 </div>
-<div id="initial-questions" class="section level1">
-<h1>Initial Questions</h1>
+<div id="initial-questions" class="section level2">
+<h2>Initial Questions</h2>
 <p>After a very preliminary glance at the data set, some of the proposed questions were:</p>
 <ul>
 <li><p>Do different types of EMS calls get treated differently?</p></li>
@@ -345,22 +345,22 @@ $(document).ready(function () {
 <li>Does response time differ by neighborhood?</li>
 </ul>
 </div>
-<div id="data" class="section level1">
-<h1>Data</h1>
+<div id="data" class="section level2">
+<h2>Data</h2>
 <p>The data source for this project comes from the <a href="https://data.cityofnewyork.us/Public-Safety/EMS-Incident-Dispatch-Data/76xm-jjuj">NYC EMS Incident Dispatch Data</a>, owned by NYCOpenData and provided by the Fire Department of New York City.</p>
 </div>
-<div id="exploratory-analysis" class="section level1">
-<h1>Exploratory analysis</h1>
-<div id="death-counts-by-month" class="section level2">
-<h2>Death Counts by Month</h2>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<div id="death-counts-by-month" class="section level3">
+<h3>Death Counts by Month</h3>
 <p>There seems to be a slight seasonal trend in the number of those who are deceased upon arrival of the EMS Response Team, with peaks during the summer and winter. There was a 34% decrease in the number of deaths between January, the month with the most, and September, the month with the least.</p>
 </div>
 </div>
-<div id="statistical-analysis" class="section level1">
-<h1>Statistical analysis</h1>
+<div id="statistical-analysis" class="section level2">
+<h2>Statistical analysis</h2>
 </div>
-<div id="discussion" class="section level1">
-<h1>Discussion</h1>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
 <p>The data seem to suggests a seasonal trend in the number of individuals deceased upon arrival of EMS Response Teams. However, it is unclear whether this trend is consistent from year-to-year.</p>
 <p>One of the biggest limitations of our study is that the data did not contain any variable indicating the type of response unit sent. The FDNY is in command of many different response units, which all correspond to different types of emergencies.</p>
 <p>Additionally, the data is only recorded once the incident is created in the FDNY system. If you’ve ever called 911 (hopefully you haven’t had to), you’ll know that the first person you talk to is not a police officer, emergency medical technician, or fire fighter. It’s a 911 Call Taker, as shown by this schematic provided by <a href="http://home2.nyc.gov/html/911reporting/html/anatomy/call.shtml">NYC Analytics</a>. These call takers ask tons of questions, the most notable being “What’s your emergency” to assess the appropriate emergency response team for the situation. A police officer may not be as helpful as a firefighter for a building fire.</p>
@@ -369,7 +369,10 @@ $(document).ready(function () {
 <p>911 calls are emergencies, so time is crucial. The time before the incident is created could influence not only the resulting morbidity or mortality of those involved in the emergencies, it could also influence the amount of time the FDNY spends on the phone before a unit is dispatched. For example, if the 911 caller is in some way incapacitated, the initial call taker may have difficulties assessing the emergency and identifying the appropriate response team. The FDNY EMS dispatcher may also then have difficulties assessing what type of unit to send, or even where to send the unit.</p>
 <p>As a result, the data provide indications of the efficiency of the EMS Response Teams in each neighborhood, but not necessarily the safety or other inherent traits thereof.</p>
 <p>Another limitation to our data is that it was only collected from 2018. Amid political unrest regarding our current President and his legal affairs, Supreme Court Judge pick, and immigration policies; unhappiness with NYC’s current mayor; and mass shootings rocking the nation, this year could have seen an increase in violent crime or substance abuse, skewing the results. Conversely, compared to the election year of 2016, crime and substance abuse could have dropped significantly. We cannot extrapolate our findings to years past or present.</p>
+<div id="future-work" class="section level4">
+<h4>Future Work</h4>
 <p>The distributions of those deceased upon arrival of EMS Response Teams and travel time may be affected by a number of external factors. Future research comparing political climate, extreme weather, or local cultural events to multiple years of data may provide more insight into the reasoning for the variation seen in our data.</p>
+</div>
 </div>
 
 
