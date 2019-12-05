@@ -33,11 +33,8 @@ Multiple data sources were considered, but the choice to examine Emergency Medic
 After a very preliminary glance at the data set, some of the proposed questions were:
 
 * Do different types of EMS calls get treated differently?
-
 * Are response times different for different types of calls?
-
 * Do response times vary by borough, zip code, or neighborhood?
-
 * Could geographical resources and income associated with neighborhoods be associated with response time?
 
 We wanted to examine a possible relationship between socio-economic status (SES) and response time/clinical outcome. However, finding a good proxy for SES proved to be difficult. Variables we considered were annual income, monthly rent, education, or occupation. In the end, we didn't feel that any of these could very accurately represent SES, and that even within neighborhoods that are typically "wealthy" or "poor", outliers or unreliable data would likely skew the results. Data for these variables was hard to find. For the data we did find, we were not confident that the data sources for these variables were completely accurate due to unreliable reporting methods.
